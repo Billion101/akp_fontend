@@ -3,13 +3,21 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from '../style/u_home.module.css';
 import config from '../../../config';
+import akp_icon from '../../../assets/akp-box.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons'; 
+
 const UserHome = () => {
     const navigate = useNavigate();
     const [date, setDate] = useState('');
     const [notes, setNotes] = useState([]);
     const token = localStorage.getItem('token');
     const [showModal, setShowModal] = useState(false);
-    const [selectedDayId, setSelectedDayId] = useState(null); // Added state for selected day to delete
+    const [selectedDayId, setSelectedDayId] = useState(null); 
+    const [clickedNote, setClickedNote] = useState(null);
+    const handleClick = (id) => {
+        setClickedNote(id);
+    };
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem('token');
@@ -83,13 +91,17 @@ const UserHome = () => {
     return (
         <div className={styles.container}>
             <nav className={styles.navbar}>
-                <h1 className={styles.navbarTitle}>User Page</h1>
+                <div className={styles.logoName}>
+                <FontAwesomeIcon icon={faUser} className={styles.icon} />
+                <h2 className={styles.navbarTitle}>User Page</h2>
+                </div>
+               
                 <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
             </nav>
 
-            <div className={styles.mainContent}>
+            <main className={styles.main}>
                 <div className={styles.addNoteSection}>
-                    <h2 className={styles.addNoteTitle}>Add New Note</h2>
+                    <h2 className={styles.addNoteTitle}>Add New Day</h2>
                     <div className={styles.addNoteForm}>
                         <input
                             type="date"
@@ -97,23 +109,35 @@ const UserHome = () => {
                             onChange={(e) => setDate(e.target.value)}
                             className={styles.dateInput}
                         />
-                        <button onClick={addDay} className={styles.addButton}>Add Note</button>
+                        <button onClick={addDay} className={styles.addButton}>Add Day</button>
                     </div>
                 </div>
 
                 <div className={styles.notesGrid}>
-                    {notes.map(note => (
-                        <div key={note.id} className={styles.noteCard}>
-                            <div className={styles.noteContent}>
-                                <Link to={`/user-data/${note.id}`} className={styles.noteLink}>
-                                    {new Date(note.date).toLocaleDateString()}
-                                </Link>
-                                <button onClick={() => handleDelete(note.id)} className={`${styles.button} ${styles.deleteButton}`}>Delete</button>
-                            </div>
-                        </div>
-                    ))}
+    {notes.map((note) => (
+        <div
+            key={note.id}
+            className={`${styles.noteCard} ${clickedNote === note.id ? styles.clicked : ''}`}
+            onClick={() => handleClick(note.id)}
+        >
+            <div className={styles.noteContent}>
+                <div className={styles.dateBox}>
+                    {new Date(note.date).toLocaleDateString()}
                 </div>
+                <Link to={`/user-data/${note.id}`} className={styles.noteLink}>
+                    <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
+                </Link>
+                <button
+                    onClick={() => handleDelete(note.id)}
+                    className={`${styles.button} ${styles.deleteButton}`}
+                >
+                    Delete
+                </button>
             </div>
+        </div>
+    ))}
+</div>
+            </main>
 
             {showModal && (
                 <div className={styles.modalOverlay}>

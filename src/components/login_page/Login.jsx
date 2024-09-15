@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/akp-logo.png';
 import styles from './login.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // Import Font Awesome icons
+import { faUser, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; 
 import config from '../../config';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-  const [errorMessage, setErrorMessage] = useState(''); // State to handle error messages
+  const [showPassword, setShowPassword] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,45 +24,59 @@ const Login = () => {
       } else {
         navigate('/home-user');
       }
-      setErrorMessage(''); // Clear any previous error message
+      setErrorMessage(''); 
     } catch (error) {
-      setErrorMessage('Incorrect username or password'); // Set the error message
+      setErrorMessage('Incorrect username or password'); 
       console.error('Error logging in');
     }
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.loginContainer}>
-        <img src={logo} alt="Logo" />
-        <h2>Admin Login</h2>
-        <form onSubmit={handleSubmit}>
-          <label>Username:</label>
-          <input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-          />
-          <label>Password:</label>
-          <div className={styles.passwordContainer}>
-            <input 
-              type={showPassword ? 'text' : 'password'} 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-            />
-            <span 
-              className={styles.eyeIcon} 
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-            </span>
-          </div>
-          {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>} {/* Error message */}
-          <button type="submit">Login</button>
-        </form>
+    <div className={styles.loginForm}>
+      <div className={styles.logoContainer}>
+        <img src={logo} alt="AKP Logistics" className={styles.logo} />
       </div>
+      <h2 className={styles.title}>Admin Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.inputGroup}>
+          <FontAwesomeIcon icon={faUser} className={styles.icon} />
+          <input
+            type="text"
+            placeholder="Username"
+            className={styles.input}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <FontAwesomeIcon icon={faLock} className={styles.icon} />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password"
+            className={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className={styles.togglePassword}
+          >
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}className={styles.icon} />
+          </button>
+        </div>
+        {errorMessage && (
+          <p className={styles.errorMessage}>{errorMessage}</p>
+        )}
+        <button type="submit" className={styles.submitButton}>
+          Login
+        </button>
+      </form>
     </div>
-  );
+  </div>
+);
 };
-
 export default Login;

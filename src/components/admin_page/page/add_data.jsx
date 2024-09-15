@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import styles from '../style/ad_data.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { faPlus, faTrash,faSearch,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash,faSearch,faArrowLeft, faSave, faTimes, faEdit } from '@fortawesome/free-solid-svg-icons';
 import config from '../../../config';
 const AddData = () => {
     const { id: dayId } = useParams();
@@ -189,10 +189,10 @@ const AddData = () => {
         popup.className = styles.popup;
     
         popup.innerHTML = `
-            <h3 class="${styles.popupTitle}">Select a Role</h3>
+            <h3 class="${styles.popupTitle}">ເລືອກຈະສົ່ງໄປຫາ:</h3>
             <button class="${styles.roleButton}" data-role="user1">ສົ່ງໃຫ້ສາຂາ</button>
             <button class="${styles.roleButton}" data-role="user2">ສົ່ງໃຫ້ລູກຄ້າ</button>
-            <button class="${styles.cancelButton}">Cancel</button>
+            <button class="${styles.cancelsButton}">ຍົກເລີກ</button>
         `;
     
         popup.onclick = (e) => {
@@ -200,7 +200,7 @@ const AddData = () => {
             if (role) {
                 sendMessage(role);
                 document.body.removeChild(popup);
-            } else if (e.target.classList.contains(styles.cancelButton)) {
+            } else if (e.target.classList.contains(styles.cancelsButton)) {
                 document.body.removeChild(popup);
             }
         };
@@ -269,6 +269,7 @@ ${totalPart}
       </nav>
 
             <form onSubmit={handleSubmit} className={styles.formContainer} ref={editBoxRef}>
+                <h3 >{isEditing ? 'Edit Entry' : 'Add New Entry'}</h3>
                 <input
                     type="text"
                     name="userName"
@@ -359,34 +360,44 @@ ${totalPart}
                 {isEditing && (
                     <button 
                         onClick={addNewRow}
-                        className={`${styles.actionButton} ${styles.addButton}`}
+                        className={`${styles.actionButton} ${styles.button}`}
                         type="button"
                     >
-                        <FontAwesomeIcon icon={faPlus} className={styles.icon} /> 
+                        <FontAwesomeIcon icon={faPlus} className={styles.icon} /> Add New Column
                     </button>
                 )}
 
-                <div>
+            <div className={styles.totals}>
+            <div className={styles.totalItem}>
                     <label>Total Price: </label>
                     <input
-                        type="text"
+                        type="number"
                         name="totalPrice"
                         value={formData.totalPrice}
                         onChange={handleInputChange}
                         className={styles.input}
                     />
-                   <label>Total Weight: {formData.totalWeight}</label>
-                    <label>Total M3: {formData.totalM3}</label>
-                </div>
+              </div>
+              <div className={styles.totalItem}>
+                  <label>Total Weight: </label>
+                  <span>{formData.totalWeight}</span>
+              </div>
+              <div className={styles.totalItem}>
+                  <label>Total M3: </label>
+                  <span>{formData.totalM3}</span>
+              </div>
+          </div>
 
+                <div className={styles.funcbtn}>
                 <button type="submit" className={styles.button}>
-                    {isEditing ? 'Update' : 'Save'}
+                <FontAwesomeIcon icon={faSave} /> {isEditing ? 'Save Edit' : 'Save'}
                 </button>
                 {isEditing && (
                     <button onClick={resetForm} className={`${styles.button} ${styles.cancelButton}`} type="button">
-                        Cancel
+                        <FontAwesomeIcon icon={faTimes} />Cancel
                     </button>
                 )}
+                </div>
             </form>
 
             {filteredEntries.map((entry, index) => (
@@ -421,6 +432,7 @@ ${totalPart}
                         <p>Total Price: {entry.totalPrice} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
                     </div>
                     <button onClick={() => startEditing(entry)} className={`${styles.actionButton} ${styles.editButton}`}>
+                    <FontAwesomeIcon icon={faEdit}className={styles.icon} />
                         Edit
                     </button>
                     <button onClick={() => sendWhatsAppMessage(entry)} className={`${styles.actionButton} ${styles.whatsappButton}`}>

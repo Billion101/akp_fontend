@@ -1,234 +1,296 @@
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+ 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color:#FFAA1A;
+    padding: 15px 25px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.backButton:hover {
+  color: black;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #7f8c8d;
+}
+
+.searchInput {
+  padding: 8px 8px 8px 35px;
+  border: none;
+  border-radius: 20px;
+  background-color: white;
+    color: black;
+  width: 300px;
+}
+
+.searchInput::placeholder {
+  color: #bdc3c7;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  scroll-behavior: smooth;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.totalItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.totalItem label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+
+.button {
+  padding: 9px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  width: 15%;
+  margin-right: 10px;
+}
+
+.button:hover {
+  background-color: #218838;
+}
+.funcbtn{
+  display: flex;
+}
+
+.cancelButton {
+  width: 15%; 
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 0;
   }
   
-   
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2c3e50;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+  .cancelButton:hover {
+    background-color: #dc2626;
   }
   
-  .backButton {
-    text-decoration: none;
-    color: #ecf0f1;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease;
-  }
-  
-  .backButton:hover {
-    color: #007bff;
-  }
-  
-  .searchContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    left: 10px;
-    color: #7f8c8d;
-  }
-  
-  .searchInput {
-    padding: 8px 8px 8px 35px;
-    border: none;
-    border-radius: 20px;
-    background-color: #34495e;
-    color: #ecf0f1;
-    width: 300px;
-  }
-  
-  .searchInput::placeholder {
-    color: #bdc3c7;
-  }
-  
-  .formContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    scroll-behavior: smooth;
-    /* scroll-duration: 100ms; */
-  }
-  
-  .input {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .table th, .table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
-  
-  .table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-  }
-  
-  .button:hover {
-    background-color: #218838;
-  }
-  
-  .entryContainer {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 30px;
-    background-color: #f9f9f9;
-  }
-  
-  .entryHeader {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .entryTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  
-  .entryTable th, .entryTable td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .entryTable th {
-    background-color: #e9ecef;
-  }
-  
-  .totalInfo {
-    margin-top: 15px;
-    font-weight: bold;
-  }
-  
-  .actionButton {
-    padding: 8px 15px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    background-color: #25D366; /* WhatsApp green */
-  }
-  
-  .editButton {
-    background-color: #e11313;
-    color: #212529;
-  }
-  
-  .editButton:hover {
-    background-color: #f44910;
-  }
-  
-  .whatsappButton:hover {
-    background-color: #128C7E; /* Darker WhatsApp green on hover */
-  }
-  
-  .icon {
-    margin-right: 5px;
-    font-size: 15px;
-  }
-  
-  .whatsappButton:focus {
-    outline: none;
-  }
+.entryContainer {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  background-color: #f9f9f9;
+}
+
+.entryHeader {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.entryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.entryTable th, .entryTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.entryTable th {
+  background-color: #e9ecef;
+}
+
+.totalInfo {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.actionButton {
+  padding: 8px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  background-color: #25D366; 
+}
+
+
+.deleteButton {
+  padding: 8px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  background-color: #e11313;
+}
+
+.editButton {
+  background-color: #e11313;
+  color: #212529;
+}
+
+.editButton:hover {
+  background-color: #f44910;
+}
+
+.whatsappButton:hover {
+  background-color: #128C7E; /* Darker WhatsApp green on hover */
+}
+
+.icon {
+  margin-right: 5px;
+  font-size: 15px;
+}
+
+.whatsappButton:focus {
+  outline: none;
+}
 
 
 
 
-  /* Popup Container */
+/* Popup Container */
+.popup {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #f9f9f9;
+padding: 30px;
+width: 300px;
+border-radius: 12px;
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+z-index: 1000;
+text-align: center;
+font-family: Arial, sans-serif;
+}
+
+/* Popup container */
 .popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #f9f9f9;
-  padding: 30px;
   width: 300px;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  text-align: center;
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Popup Title */
+/* Popup title */
 .popupTitle {
+  font-size: 18px;
   margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 600;
+  text-align: center;
   color: #333;
 }
 
-/* Role Buttons */
 .roleButton {
-  display: block;
+  background-color: #30b752; /* Green color */
+  color: #fff;
+  padding: 10px 15px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
   width: 100%;
-  margin-bottom: 10px;
-  padding: 12px;
-  background-color: #25D366;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
 }
 
+/* Cancel button */
+.cancelsButton {
+  background-color: #e11313; 
+  color: #fff;
+  padding: 10px 15px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 60%;
+  transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+
+/* Hover effects for buttons */
 .roleButton:hover {
-  background-color: #25D366;
+  opacity: 0.9;
+  background-color: #FFAA1A;
 }
 
-/* Cancel Button */
-.cancelButton {
-  display: block;
-  width: 70%; 
-  padding: 12px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 0 auto; 
-}
-
-.cancelButton:hover {
-  background-color: #5a6268;
+.cancelsButton:hover {
+  opacity: 0.9;
+  background-color: #c10c0c; /* Slightly different red for cancel button */
 }

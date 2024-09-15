@@ -1,124 +1,180 @@
-/* ManageUsers.module.css */
+/* Base Styles */
+.container {
+    padding: 20px;
+    background-color: #ffffff;
+    color: #333333;
+    font-family: Arial, sans-serif;
+}
 
 .navbar {
-    background-color: #f8f9fa;
-    padding: 10px;
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #FFA500;  
+    padding: 10px;
+    border-radius: 8px;
 }
 
 .navLink {
-    color: #007bff;
+    color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-}
-
-.navLink:hover {
-    text-decoration: underline;
+    font-size: 16px;
 }
 
 .logoutButton {
-    background-color: #dc3545;
-    color: white;
+    background-color: #ff3300; 
     border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-weight: bold;
+    color: #ffffff;
+    padding: 8px 16px;
     border-radius: 5px;
-}
-
-.logoutButton:hover {
-    background-color: #c82333;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .title {
+    color:#FFA500;  
+    margin-bottom: 15px;
     font-size: 24px;
-    margin-bottom: 20px;
-    color: #343a40;
 }
 
 .inputField {
+    display: block;
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ced4da;
+    border: 1px solid #cccccc;
     border-radius: 5px;
     font-size: 16px;
 }
 
 .addButton {
-    background-color: #28a745;
-    color: white;
+    background-color: #FFA500;  
     border: none;
+    color: #ffffff;
     padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
     border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-.addButton:hover {
-    background-color: #218838;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .usersList {
     list-style-type: none;
     padding: 0;
-    margin: 0;
 }
 
 .userItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ced4da;
-}
-
-.userItem:last-child {
-    border-bottom: none;
-}
-
-.editInput {
-    width: 100%;
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ced4da;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
     border-radius: 5px;
-    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userActions {
+    display: flex;
+    gap: 5px; 
 }
 
 .editButton,
 .deleteButton,
-.saveButton,
 .cancelButton {
-    background-color: #007bff;
-    color: white;
+    background-color: #ff6600;
     border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-weight: bold;
+    color: #ffffff;
+    padding: 6px 12px;
     border-radius: 5px;
-    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.saveButton{
+    background-color: #3def25;
+    border: none;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .deleteButton {
-    background-color: #dc3545;
-}
-
-.saveButton {
-    background-color: #28a745;
+    background-color: #ff3300;
 }
 
 .cancelButton {
-    background-color: #6c757d;
+    background-color: #ff6600;
 }
 
-.editButton:hover,
-.deleteButton:hover,
-.saveButton:hover,
-.cancelButton:hover {
-    opacity: 0.8;
+.editInput {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logoutButton {
+        margin-top: 10px;
+    }
+
+    .inputField,
+    .editInput {
+        font-size: 14px;
+    }
+
+    .addButton,
+    .editButton,
+    .deleteButton,
+    .saveButton,
+    .cancelButton {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .userItem {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .userActions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .inputField,
+    .editInput {
+        font-size: 12px;
+    }
+
+    .addButton,
+    .editButton,
+    .deleteButton,
+    .saveButton,
+    .cancelButton {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }

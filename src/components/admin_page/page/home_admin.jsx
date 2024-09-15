@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from '../style/ad_home.module.css';
 import config from '../../../config';
+import akp_icon from '../../../assets/akp-box.png';
+import logo from '../../../assets/akp-logo.png';
+
 const HomeAdmin = () => {
     const navigate = useNavigate();
     const [date, setDate] = useState('');
@@ -11,7 +14,10 @@ const HomeAdmin = () => {
     const [selectedDayId, setSelectedDayId] = useState(null);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [adminPassword, setAdminPassword] = useState('');
-
+    const [clickedNote, setClickedNote] = useState(null);
+    const handleClick = (id) => {
+        setClickedNote(id);
+    };
     const handleLogout = useCallback(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
@@ -110,7 +116,10 @@ const HomeAdmin = () => {
         <div className={styles.container}>
             <nav className={styles.navbar}>
                 <div className={styles.navContent}>
-                    <h2 className={styles.title}>Admin Page</h2>
+                <div className={styles.nameLogo}>
+                <img src={logo} alt="AKP" className={styles.logo} />
+                <h2 className={styles.title}>Admin Page</h2>
+                </div>
                     <div>
                         <a href="/manage-users" onClick={handleManageUsersClick} className={styles.link}>Manage Users</a>
                         <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
@@ -120,7 +129,7 @@ const HomeAdmin = () => {
 
             <main className={styles.main}>
                 <div className={styles.addNoteSection}>
-                    <h3 className={styles.addNoteTitle}>Add New Note</h3>
+                    <h3 className={styles.addNoteTitle}>Add New Day</h3>
                     <div className={styles.addNoteForm}>
                         <input
                             type="date"
@@ -128,22 +137,36 @@ const HomeAdmin = () => {
                             onChange={(e) => setDate(e.target.value)}
                             className={styles.dateInput}
                         />
-                        <button onClick={addDay} className={`${styles.button} ${styles.addButton}`}>Add Note</button>
+                        <button onClick={addDay} className={`${styles.button} ${styles.addButton}`}>Add Day</button>
                     </div>
                 </div>
 
                 <div className={styles.notesGrid}>
-                    {notes.map(note => (
-                        <div key={note.id} className={styles.noteCard}>
-                            <div className={styles.noteContent}>
-                                <Link to={`/add-data/${note.id}`} className={styles.noteLink}>
-                                    {new Date(note.date).toLocaleDateString()}
-                                </Link>
-                                <button onClick={() => handleDelete(note.id)} className={`${styles.button} ${styles.deleteButton}`}>Delete</button>
-                            </div>
-                        </div>
-                    ))}
+    {notes.map((note) => (
+        <div
+            key={note.id}
+            className={`${styles.noteCard} ${clickedNote === note.id ? styles.clicked : ''}`}
+            onClick={() => handleClick(note.id)}
+        >
+            <div className={styles.noteContent}>
+                <div className={styles.dateBox}>
+                    {new Date(note.date).toLocaleDateString()}
                 </div>
+                <Link to={`/add-data/${note.id}`} className={styles.noteLink}>
+                    <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
+                </Link>
+                <button
+                    onClick={() => handleDelete(note.id)}
+                    className={`${styles.button} ${styles.deleteButton}`}
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    ))}
+</div>
+
+
             </main>
 
             {/* Confirmation Modal for Delete */}

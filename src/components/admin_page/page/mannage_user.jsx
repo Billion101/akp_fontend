@@ -85,7 +85,7 @@ const ManageUsers = () => {
     };
 
     return (
-        <div>
+        <div className = {styles.container}>
             <nav className={styles.navbar}>
                 <Link to="/home-admin" className={styles.navLink}>Back to Admin</Link>
                 <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
@@ -109,37 +109,43 @@ const ManageUsers = () => {
             <button onClick={handleAddUser} className={styles.addButton}>Add User</button>
 
             <h3 className={styles.title}>Users List</h3>
-            <ul className={styles.usersList}>
-                {users.map(user => (
-                    <li key={user.id} className={styles.userItem}>
-                        {editingUser && editingUser.id === user.id ? (
-                            <>
-                                <input 
-                                    type="text" 
-                                    value={editingUser.newUsername} 
-                                    onChange={(e) => setEditingUser({...editingUser, newUsername: e.target.value})}
-                                    className={styles.editInput}
-                                />
-                                <input 
-                                    type="password" 
-                                    placeholder="New Password (optional)"
-                                    value={editingUser.newPassword} 
-                                    onChange={(e) => setEditingUser({...editingUser, newPassword: e.target.value})}
-                                    className={styles.editInput}
-                                />
-                                <button onClick={handleUpdateUser} className={styles.saveButton}>Save</button>
-                                <button onClick={() => setEditingUser(null)} className={styles.cancelButton}>Cancel</button>
-                            </>
-                        ) : (
-                            <>
-                                {user.username} - {user.role}
-                                <button onClick={() => handleEditUser(user)} className={styles.editButton}>Edit</button>
-                                <button onClick={() => handleDeleteUser(user.id)} className={styles.deleteButton}>Delete</button>
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
+           
+<ul className={styles.usersList}>
+    {users.map(user => (
+        <li key={user.id} className={styles.userItem}>
+            {editingUser && editingUser.id === user.id ? (
+                <>
+                    <input 
+                        type="text" 
+                        value={editingUser.newUsername} 
+                        onChange={(e) => setEditingUser({...editingUser, newUsername: e.target.value})}
+                        className={styles.editInput}
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="New Password (optional)"
+                        value={editingUser.newPassword} 
+                        onChange={(e) => setEditingUser({...editingUser, newPassword: e.target.value})}
+                        className={styles.editInput}
+                    />
+                    <div className={styles.userActions}>
+                        <button onClick={handleUpdateUser} className={styles.saveButton}>Save</button>
+                        <button onClick={() => setEditingUser(null)} className={styles.cancelButton}>Cancel</button>
+                    </div>
+                </>
+            ) : (
+                <>
+                    {user.username} - {user.role}
+                    <div className={styles.userActions}>
+                        <button onClick={() => handleEditUser(user)} className={styles.editButton}>Edit</button>
+                        <button onClick={() => handleDeleteUser(user.id)} className={styles.deleteButton}>Delete</button>
+                    </div>
+                </>
+            )}
+        </li>
+    ))}
+</ul>
+
         </div>
     );
 }

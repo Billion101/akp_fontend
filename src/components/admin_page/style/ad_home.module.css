@@ -5,30 +5,46 @@
   }
   
   .navbar {
-    background-color: #ffffff;
-    padding: 1rem;
+    background-color: #FFA500; 
+    padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .navContent {
-    max-width: 1200px;
-    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.navContent {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
+    justify-content: space-between;
+}
+.nameLogo{
+  display: flex;
+  cursor: pointer;
+}
+.nameLogo h2{
+  margin-top: 15px;
+}
+.logo {
+    width: 60px; 
+    height: auto;
+    
+}
+
+.title {
+    color: white;
+    margin: 0;
+}
+
+.navActions {
+    display: flex;
+    align-items: center;
+}
   
-  .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #1f2937;
-  }
-  
-  .link {
-    color: #3b82f6;
-    text-decoration: none;
-    margin-right: 1rem;
-  }
+.link {
+  color: white; /* White text for links */
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+}
   
   .link:hover {
     text-decoration: underline;
@@ -58,74 +74,119 @@
   }
   
   .addNoteSection {
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
+  background-color: #FFF;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addNoteTitle {
+  color: #FF6600;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.addNoteForm {
+  display: flex;
+  gap: 10px;
+}
+
+.dateInput {
+  flex-grow: 1;
+  padding: 10px;
+  border: 2px solid #FF6600;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.addButton {
+  background-color: #FF6600;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #E65C00;
+}
   
-  .addNoteTitle {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .addNoteForm {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .dateInput {
-    flex-grow: 1;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
-  }
-  
-  .addButton {
-    background-color: #3b82f6;
-    color: white;
-  }
-  
-  .addButton:hover {
-    background-color: #2563eb;
-  }
+
   
   .notesGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 1rem;
   }
-  
-  .noteCard {
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    height: 300px;
-    width: 400px;
-    position: relative;
-  }
-  
   .noteContent {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-  
-  .noteLink {
+    align-items: center;
+    text-align: center;
+}
+
+.noteLink {
     font-size: 1.125rem;
     color: #3b82f6;
     text-decoration: none;
-  }
+    margin-top: 1rem;
+}
   
-  .noteLink:hover {
-    text-decoration: underline;
-  }
-  
-  .deleteButton {
+.dateBox {
+  cursor: pointer;
+  position: absolute;
+  top: 0.5rem;
+  left:0.5rem;
+  background-color: #FFAA1A;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  color: white;
+  z-index: 1;
+}
+.noteCard {
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    width: 350px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;
+}
+
+.noteCard.clicked {
+    transform: translateX(100px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.noteImage {
+    width: 90%; 
+    height: 90%;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.noteCard:hover .noteImage {
+    transform: translate(-3%, -3%) scale(1.1);
+}
+
+.deleteButton {
     background-color: #ef4444;
     color: white;
     padding: 0.25rem 0.5rem;
@@ -133,50 +194,20 @@
     position: absolute;
     bottom: 1rem;
     right: 1rem;
-  }
-  
-  .deleteButton:hover {
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    z-index: 2; 
+}
+
+.deleteButton:hover {
     background-color: #dc2626;
-  }
-  /* ad_home.module.css */
-/* .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+    transform: scale(1.4); 
 }
 
-.modalContent {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
-.modalActions {
-  margin-top: 50px;
-}
-
-.confirmButton {
-  background-color: #d9534f;
-  color: white;
-  margin-right: 10px;
-}
-
-.cancelButton {
-  background-color: #5bc0de;
-  color: white;
-} */
-/* Existing styles... */
-
-/* Enhanced Modal Styles */
+ 
 .modalOverlay {
     position: fixed;
     top: 0;

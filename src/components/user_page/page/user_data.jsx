@@ -253,7 +253,7 @@ ${totalPart}
     // Render functions
     const renderForm = () => (
       <div className={styles.addForm}>
-          <h3 className={styles.sectionTitle}>{editMode ? 'Edit Entry' : 'Add New Entry'}</h3>
+          <h3 >{editMode ? 'Edit Entry' : 'Add New Entry'}</h3>
           <input
               type="text"
               value={formData.userName}
@@ -360,8 +360,8 @@ ${totalPart}
                   </button>
               </div>
           ) : (
-              <button onClick={addUserEntry} className={styles.addButton}>
-                  <FontAwesomeIcon icon={faPlus} /> Add Data
+              <button onClick={addUserEntry} className={styles.saveButton}>
+                  <FontAwesomeIcon icon={faSave} /> Save Data
               </button>
           )}
       </div>
@@ -369,13 +369,10 @@ ${totalPart}
 
   const renderEntries = () => (
       <div className={styles.entriesSection}>
-          <h3 className={styles.sectionTitle}>Entries</h3>
           {filteredEntries.map(entry => (
               <div key={entry.id} className={styles.entryCard}>
-                  <div className={styles.entryHeader}>
-                      <h4>{entry.userName}</h4>
-                      <p>{entry.phoneNumber}</p>
-                  </div>
+                  <h4 className={styles.entryHeader}>User: {entry.userName}</h4>
+                  <p>Phone: {entry.phoneNumber}</p>
                   <table className={styles.table}>
                       <thead>
                           <tr>
@@ -407,9 +404,7 @@ ${totalPart}
                       </tbody>
                   </table>
                   <div className={styles.entryTotals}>
-                      <p>Total Price: {entry.totalPrice}</p>
-                      <p>Total Weight: {entry.totalWeight}</p>
-                      <p>Total M3: {entry.totalM3}</p>
+                  <p>Total Price: {entry.totalPrice} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
                   </div>
                   <div className={styles.entryActions}>
                       <button onClick={() => handleEditClick(entry)} className={styles.editButton}>
