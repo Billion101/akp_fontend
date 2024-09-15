@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import styles from '../style/ad_data.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash,faSearch,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import config from '../../../config';
 const AddData = () => {
     const { id: dayId } = useParams();
@@ -252,18 +252,21 @@ ${totalPart}
 
     return (
         <div className={styles.container}>
-            <nav className={styles.nav}>
-                <Link to="/home-admin" className={styles.backButton}>
-                    Back to Homepage
-                </Link>
-                <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className={styles.searchInput}
-                />
-            </nav>
+             <nav className={styles.navbar}>
+        <Link to="/home-admin" className={styles.backButton}>
+          <FontAwesomeIcon icon={faArrowLeft} /> Back to Homepage
+        </Link>
+        <div className={styles.searchContainer}>
+          <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearch}
+            className={styles.searchInput}
+          />
+        </div>
+      </nav>
 
             <form onSubmit={handleSubmit} className={styles.formContainer} ref={editBoxRef}>
                 <input
