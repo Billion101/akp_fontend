@@ -5,7 +5,7 @@ import logo from '../../assets/akp-logo.png';
 import styles from './login.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // Import Font Awesome icons
-// import config from '../../config';
+import config from '../../config';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://akp-backend.onrender.com/auth/login', { username, password });
+      const response = await axios.post(`${config.apiUrl}/auth/login`, { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', response.data.role);
       if (response.data.role === 'admin') {
