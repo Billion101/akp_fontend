@@ -1,0 +1,272 @@
+.container {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    background-color: #ffffff;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navContent {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+  }
+  
+  .link {
+    color: #3b82f6;
+    text-decoration: none;
+    margin-right: 1rem;
+  }
+  
+  .link:hover {
+    text-decoration: underline;
+  }
+  
+  .button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .logoutButton {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .logoutButton:hover {
+    background-color: #dc2626;
+  }
+  
+  .main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .addNoteSection {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .addNoteTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .addNoteForm {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .dateInput {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+  }
+  
+  .addButton {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .addButton:hover {
+    background-color: #2563eb;
+  }
+  
+  .notesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1rem;
+  }
+  
+  .noteCard {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 300px;
+    width: 400px;
+    position: relative;
+  }
+  
+  .noteContent {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .noteLink {
+    font-size: 1.125rem;
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .noteLink:hover {
+    text-decoration: underline;
+  }
+  
+  .deleteButton {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .deleteButton:hover {
+    background-color: #dc2626;
+  }
+  /* ad_home.module.css */
+/* .modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modalActions {
+  margin-top: 50px;
+}
+
+.confirmButton {
+  background-color: #d9534f;
+  color: white;
+  margin-right: 10px;
+}
+
+.cancelButton {
+  background-color: #5bc0de;
+  color: white;
+} */
+/* Existing styles... */
+
+/* Enhanced Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modalContent {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+    max-width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+}
+
+.modalContent h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.passwordInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.passwordInput:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.modalActions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modalButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    flex: 1;
+    margin: 0 5px;
+}
+
+.confirmButton {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.cancelButton {
+    background-color: #f44336;
+    color: white;
+}
+
+.modalButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.modalButton:active {
+    transform: translateY(1px);
+}
+
+/* Animation for modal appearance */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modalContent {
+    animation: modalFadeIn 0.3s ease-out;
+}

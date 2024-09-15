@@ -1,0 +1,78 @@
+# Node modules
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables file
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependency directories
+.bower_components/
+
+# Optional npm cache directory
+.npm/
+
+# ESLint cache
+.eslintcache
+
+# Parcel cache (if using Parcel bundler)
+.cache/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
+
+# IDE settings (e.g., VSCode, JetBrains products)
+.vscode/
+.idea/
+
+# MacOS system files
+.DS_Store
+
+# Test coverage (if using a testing tool like Jest or Cypress)
+coverage/
+
+# Service worker and build-related files
+.cache/
+.cache-loader/
+
+# Storybook files (if using Storybook)
+.storybook/
+out/
+
+# Build artifacts (WebPack, Vite, etc.)
+*.tgz
+
+# Static files created during development
+static/
+
+# Output from transpilers (e.g., Babel)
+*.js.map
+
+# SASS cache (if using Sass for styling)
+.sass-cache/
+
+# VS Code settings
+.vscode/
+
+# OS generated files
+Thumbs.db
+
+# Generated files for Prettier or ESLint
+.prettierignore
+.prettiercache

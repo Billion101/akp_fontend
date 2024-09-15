@@ -1,0 +1,75 @@
+.container {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.loginContainer {
+    background-color: white;
+    padding: 70px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    position: relative; /* For positioning eye icon */
+}
+
+.loginContainer img {
+    width: 200px;
+    margin-bottom: 30px;
+}
+
+.loginContainer form {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginContainer label {
+    margin: 10px 0 5px;
+    text-align: left;
+}
+
+.loginContainer input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.passwordContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.eyeIcon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.errorMessage {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.loginContainer button {
+    margin-top: 1rem;
+    padding: 15px;
+    background-color: #FFAA1A;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 22px;
+    border-radius: 10px;
+}

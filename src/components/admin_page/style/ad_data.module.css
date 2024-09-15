@@ -1,0 +1,215 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .nav {
+    background-color: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .backButton {
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .backButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .searchInput {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+  }
+  
+  .formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+    /* scroll-duration: 100ms; */
+  }
+  
+  .input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #218838;
+  }
+  
+  .entryContainer {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+  }
+  
+  .entryHeader {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .entryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  .entryTable th, .entryTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .entryTable th {
+    background-color: #e9ecef;
+  }
+  
+  .totalInfo {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  .actionButton {
+    padding: 8px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    background-color: #25D366; /* WhatsApp green */
+  }
+  
+  .editButton {
+    background-color: #e11313;
+    color: #212529;
+  }
+  
+  .editButton:hover {
+    background-color: #f44910;
+  }
+  
+  .whatsappButton:hover {
+    background-color: #128C7E; /* Darker WhatsApp green on hover */
+  }
+  
+  .icon {
+    margin-right: 5px;
+    font-size: 15px;
+  }
+  
+  .whatsappButton:focus {
+    outline: none;
+  }
+
+
+
+
+  /* Popup Container */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f9f9f9;
+  padding: 30px;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Popup Title */
+.popupTitle {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Role Buttons */
+.roleButton {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  background-color: #25D366;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.roleButton:hover {
+  background-color: #25D366;
+}
+
+/* Cancel Button */
+.cancelButton {
+  display: block;
+  width: 70%; 
+  padding: 12px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto; 
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
