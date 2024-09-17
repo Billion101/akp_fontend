@@ -203,6 +203,23 @@ const UserAddData = () => {
             }));
         }
     };
+    const deleteEntry = (entryId) => {
+        if (window.confirm('Are you sure you want to delete this entry?')) {
+            axios.delete(`${config.apiUrl}/user/deleteUserEntry/${entryId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then(() => {
+                fetchEntries();
+                alert('Entry deleted successfully!');
+            })
+            .catch(error => {
+                console.error('Error deleting the entry:', error);
+                if (error.response?.status === 403) navigate('/');
+                else alert('Failed to delete entry. Please try again.');
+            }
+        );
+        }
+    };
 
     const saveEdit = () => {
         axios.put(`${config.apiUrl}/user/updateUserEntry/${editEntryId}`, {
@@ -413,6 +430,9 @@ ${totalPart}
                       <button onClick={() => sendWhatsAppMessage(entry)} className={styles.whatsappButton}>
                           <FontAwesomeIcon icon={faWhatsapp} /> Send WhatsApp
                       </button>
+                      <button onClick={() => deleteEntry(entry.id)} className={styles.deleteButton}>
+                            <FontAwesomeIcon icon={faTrash} /> Delete
+                        </button>
                   </div>
               </div>
           ))}

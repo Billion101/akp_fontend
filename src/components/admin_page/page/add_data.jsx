@@ -173,6 +173,21 @@ const AddData = () => {
                 });
         }
     };
+    const deleteEntry = (entryId) => {
+        if (window.confirm('Are you sure you want to delete this entry?')) {
+            axios.delete(`${config.apiUrl}/admin/deleteAdminEntry/${entryId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then(() => {
+                fetchEntries();
+                alert('Entry deleted successfully!');
+            })
+            .catch(error => {
+                console.error('Error deleting the entry:', error);
+                alert('Failed to delete entry. Please try again.');
+            });
+        }
+    };
 
     const sortCodes = (codes) => {
         return [...codes].sort((a, b) => {
@@ -439,6 +454,10 @@ ${totalPart}
                         <FontAwesomeIcon icon={faWhatsapp} className={styles.icon} />
                         Send to WhatsApp
                     </button>
+                    <button onClick={() => deleteEntry(entry.id)} className={`${styles.actionButton} ${styles.deleteButton}`}>
+                            <FontAwesomeIcon icon={faTrash} className={styles.icon} />
+                            Delete
+                        </button>
                 </div>
             ))}
         </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Login from './components/login_page/Login';
-import HomeAdmin from './components/admin_page/page/home_admin';
-import UserHome from './components/user_page/page/home_user';
+import HomeAdmin from './components/admin_page/page/admin_home';
+import UserHome from './components/user_page/page/user_home';
 
 import PrivateRoute from './components/PrivateRoute';
 import ManageUsers from './components/admin_page/page/mannage_user';
