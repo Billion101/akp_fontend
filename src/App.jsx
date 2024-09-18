@@ -6,7 +6,7 @@ import UserHome from './components/user_page/page/user_home';
 
 import PrivateRoute from './components/PrivateRoute';
 import ManageUsers from './components/admin_page/page/mannage_user';
-import AddData from './components/admin_page/page/add_data';
+import AddData from './components/admin_page/page/admin_data';
 import UserAddData from './components/user_page/page/user_data';
 
 const App = () => {

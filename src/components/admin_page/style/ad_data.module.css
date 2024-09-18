@@ -177,6 +177,7 @@
   font-size: 14px;
   transition: background-color 0.3s;
   background-color: #25D366; 
+  color: white;
 }
 
 
@@ -190,10 +191,12 @@
   transition: background-color 0.3s;
   background-color: #e11313;
 }
+.deleteButton:hover {
+  background-color: #f44910;
+}
 
 .editButton {
   background-color: #e11313;
-  color: #212529;
 }
 
 .editButton:hover {
