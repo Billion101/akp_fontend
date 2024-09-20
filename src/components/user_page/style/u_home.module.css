@@ -218,3 +218,97 @@
   background-color: #eb0b0b;
   color: white;
 }
+/* Notifications Panel */
+.notificationsPanel {
+  background-color: #f9f9f9; /* Light background for the panel */
+  border: 1px solid #ddd;    /* Light border around the panel */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px;
+  border-radius: 8px;        /* Rounded corners */
+  width: 100%;               /* Adjust width based on container */
+  max-width: 800px;          /* Set a max width for the panel */
+  margin: 20px auto;         /* Center the panel on the page */
+}
+
+.notificationsPanel h3 {
+  font-size: 24px;
+  color: #333;               /* Darker text color */
+  margin-bottom: 20px;       /* Spacing below the title */
+  text-align: center;        /* Center the title */
+  font-weight: bold;         /* Make the title bold */
+}
+
+/* Individual Notification Message */
+.notification {
+  margin-bottom: 30px;       /* Space between each notification */
+  padding: 10px;
+  border: 1px solid #ccc;    /* Border around each notification */
+  border-radius: 6px;        /* Slight rounding on corners */
+  background-color: #fff;    /* Background color for each notification */
+}
+
+.notification p {
+  font-size: 16px;
+  color: #555;               /* Slightly lighter text for the message */
+  margin-bottom: 10px;       /* Spacing between message and table */
+}
+
+/* Table Styling */
+.notificationTable {
+  width: 100%;               /* Full width table */
+  border-collapse: collapse; /* Remove spacing between cells */
+}
+
+.notificationTable th, .notificationTable td {
+  padding: 10px;
+  border: 1px solid #ddd;    /* Light borders between cells */
+  text-align: left;          /* Align text to the left */
+  font-size: 14px;
+}
+
+.notificationTable th {
+  background-color: #f0f0f0; /* Light background for table headers */
+  color: #333;               /* Darker text for headers */
+  font-weight: bold;         /* Bold headers */
+}
+
+.notificationTable td {
+  color: #555;               /* Default color for table data */
+}
+
+.notificationTable tr:nth-child(even) {
+  background-color: #f7f7f7; /* Alternate row color */
+}
+
+.notificationTable tr td:first-child {
+  width: 50px;               /* Set a fixed width for the No column */
+}
+
+/* Dynamic Color for Rows */
+.notificationTable tr {
+  transition: background-color 0.3s ease;
+}
+
+.notificationTable tr:hover {
+  background-color: #eaeaea;  /* Hover effect on rows */
+}
+
+.notificationTable td[style] {
+  font-weight: bold;          /* Bold text for rows where the color is applied */
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .notificationsPanel {
+      padding: 15px;
+  }
+
+  .notificationTable th, .notificationTable td {
+      padding: 8px;
+      font-size: 12px;        /* Smaller font for smaller screens */
+  }
+
+  .notificationsPanel h3 {
+      font-size: 20px;
+  }
+}

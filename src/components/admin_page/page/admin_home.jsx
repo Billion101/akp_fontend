@@ -152,7 +152,11 @@ const HomeAdmin = () => {
                 <div className={styles.dateBox}>
                     {new Date(note.date).toLocaleDateString()}
                 </div>
-                <Link to={`/add-data/${note.id}`} className={styles.noteLink}>
+                <Link
+                 to={`/add-data/${note.id}`}
+                  className={styles.noteLink}
+                  state={{ date: note.date }}
+                  >
                     <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
                 </Link>
                 <button

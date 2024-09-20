@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate,useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { faArrowLeft, faSearch, faEdit, faSave, faTimes, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -26,6 +26,9 @@ const UserAddData = () => {
     const token = localStorage.getItem('token');
     const codeRefs = useRef([]);
     const editBoxRef = useRef(null);
+    const location = useLocation();
+    const selectedDate = location.state?.date ? new Date(location.state.date).toLocaleDateString() : 'N/A';
+
 
     const fetchEntries = useCallback(() => {
         axios.get(`${config.apiUrl}/user/getUserEntries/${dayId}`, {
@@ -445,6 +448,9 @@ ${totalPart}
               <Link to="/home-user" className={styles.backButton}>
                   <FontAwesomeIcon icon={faArrowLeft} /> Back to Homepage
               </Link>
+              <div className={styles.dateDisplay}>
+                 Date: {selectedDate}
+                </div>
               <div className={styles.searchContainer}>
                   <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
                   <input
