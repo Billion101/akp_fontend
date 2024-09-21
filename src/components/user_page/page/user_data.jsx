@@ -49,8 +49,42 @@ const UserAddData = () => {
     }, [fetchEntries]);
 
     const handleInputChange = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        if (field.startsWith("codes[")) {
+            const index = parseInt(field.match(/\d+/)[0]); // Extract index from field like codes[0].code
+            const codeField = field.split(".")[1]; // Get the specific field inside the codes array, e.g., "code"
+    
+            const updatedCodes = [...formData.codes];
+            updatedCodes[index][codeField] = value;
+    
+            setFormData(prev => ({
+                ...prev,
+                codes: updatedCodes,
+            }));
+    
+            // If the field being updated is the 'code', handle barcode scanning logic
+            if (codeField === "code") {
+                handleBarcodeScan(index);
+            }
+        } else {
+            setFormData(prev => ({ ...prev, [field]: value }));
+        }
     };
+    
+    const handleBarcodeScan = (index) => {
+        if (formData.codes[index].code.trim() !== '') {
+            setFormData(prev => ({
+                ...prev,
+                codes: [...prev.codes, { code: '', weight: '', m3: '', color: '' }]
+            }));
+            setTimeout(() => {
+                const nextIndex = index + 1;
+                if (codeRefs.current[nextIndex]) {
+                    codeRefs.current[nextIndex].focus();
+                }
+            }, 0);
+        }
+    };
+    
 
     const handleCodeChange = (index, field, value) => {
       const newCodes = [...formData.codes];

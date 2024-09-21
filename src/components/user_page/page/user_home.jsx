@@ -5,7 +5,7 @@ import styles from '../style/u_home.module.css';
 import config from '../../../config';
 import akp_icon from '../../../assets/akp-box.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faBell } from '@fortawesome/free-solid-svg-icons'; 
+import { faUser } from '@fortawesome/free-solid-svg-icons'; 
 
 const UserHome = () => {
     const navigate = useNavigate();
@@ -15,9 +15,6 @@ const UserHome = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedDayId, setSelectedDayId] = useState(null); 
     const [clickedNote, setClickedNote] = useState(null);
-    const [notifications, setNotifications] = useState([]);
-    const [showNotifications, setShowNotifications] = useState(false);
-
     const handleClick = (id) => {
         setClickedNote(id);
     };
@@ -42,27 +39,6 @@ const UserHome = () => {
                 console.error('There was an error fetching the days!', error);
             });
     }, [token]);
-
-    const fetchNotifications = useCallback(() => {
-        axios.get(`${config.apiUrl}/user/getNotiFormAdmin`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        .then(response => {
-            setNotifications(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching notifications:', error);
-        });
-    }, [token]);
-    useEffect(() => {
-        fetchNotifications();
-    }, [fetchNotifications]);
-
-    const toggleNotifications = () => {
-        setShowNotifications(!showNotifications);
-    };
 
     const addDay = () => {
         if (!date) {
@@ -114,15 +90,12 @@ const UserHome = () => {
 
     return (
         <div className={styles.container}>
-           <nav className={styles.navbar}>
+            <nav className={styles.navbar}>
                 <div className={styles.logoName}>
-                    <FontAwesomeIcon icon={faUser} className={styles.icon} />
-                    <h2 className={styles.navbarTitle}>User Page</h2>
+                <FontAwesomeIcon icon={faUser} className={styles.icon} />
+                <h2 className={styles.navbarTitle}>User Page</h2>
                 </div>
-                <div className={styles.notificationIcon} onClick={toggleNotifications}>
-                    <FontAwesomeIcon icon={faBell} />
-                    {notifications.length > 0 && <span className={styles.notificationBadge}>{notifications.length}</span>}
-                </div>
+               
                 <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
             </nav>
 
@@ -178,38 +151,6 @@ const UserHome = () => {
                             <button onClick={cancelDelete} className={`${styles.button} ${styles.cancelButton}`}>No</button>
                         </div>
                     </div>
-                </div>
-            )}
-            {showNotifications && (
-                <div className={styles.notificationsPanel}>
-                    <h3>Notifications</h3>
-                    {notifications.map((notification, index) => (
-                        <div key={index} className={styles.notification}>
-                            <p>{notification.message}</p>
-                            <table className={styles.notificationTable}>
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Code</th>
-                                        <th>Weight</th>
-                                        <th>M3</th>
-                                        <th>Color</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {JSON.parse(notification.entry_data).codes.map((code, idx) => (
-                                        <tr key={idx} style={{ color: code.color || 'black' }}>
-                                            <td>{idx + 1}</td>
-                                            <td>{code.code}</td>
-                                            <td>{code.weight}</td>
-                                            <td>{code.m3}</td>
-                                            <td>{code.color}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ))}
                 </div>
             )}
         </div>

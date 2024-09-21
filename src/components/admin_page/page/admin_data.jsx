@@ -26,21 +26,8 @@ const AddData = () => {
     const token = localStorage.getItem('token');
     const location = useLocation();
     const selectedDate = location.state?.date ? new Date(location.state.date).toLocaleDateString() : 'N/A';
-    const [users, setUsers] = useState([]);
-    // const [selectedUser, setSelectedUser] = useState(null);
 
-    const fetchUsers = useCallback(() => {
-        axios.get(`${config.apiUrl}/admin/getUserList`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then(response => {
-            setUsers(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching users:', error);
-        });
-    }, [token]);
-    
+
     const fetchEntries = useCallback(() => {
         axios.get(`${config.apiUrl}/admin/getAdminEntries/${dayId}`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -56,12 +43,38 @@ const AddData = () => {
 
     useEffect(() => {
         fetchEntries();
-        fetchUsers();
-    }, [fetchEntries],[fetchUsers]);
+    }, [fetchEntries]);
+
+    
+    const handleBarcodeScan = (index) => {
+        // Check if the current input is not empty (barcode scan successful)
+        if (formData.codes[index].code.trim() !== '') {
+            // Add a new empty code entry for the next scan
+            setFormData(prevState => ({
+                ...prevState,
+                codes: [...prevState.codes, { code: '', weight: '', m3: '', color: '' }]
+            }));
+            // Focus the next input field (for the newly created code entry)
+            setTimeout(() => {
+                const nextIndex = index + 1;
+                if (codeRefs.current[nextIndex]) {
+                    codeRefs.current[nextIndex].focus();
+                }
+            }, 0);
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevState => ({ ...prevState, [name]: value }));
+    const updatedCodes = [...formData.codes];
+    updatedCodes[index][name] = value;
+
+    setFormData(prevState => ({ ...prevState, codes: updatedCodes }));
+
+    // If the input is a code and the value changes, handle barcode scan
+    if (name === 'code') {
+        handleBarcodeScan(index);
+    }
     };
 
     const handleCodeChange = (index, field, value) => {
@@ -229,11 +242,8 @@ const AddData = () => {
     
         popup.onclick = (e) => {
             const role = e.target.getAttribute('data-role');
-            if (role === 'user1') {
-                showUserSelection(entry);
-                document.body.removeChild(popup);
-            } else if (role === 'user2') {
-                sendMessage('user2', entry);
+            if (role) {
+                sendMessage(role);
                 document.body.removeChild(popup);
             } else if (e.target.classList.contains(styles.cancelsButton)) {
                 document.body.removeChild(popup);
@@ -241,88 +251,14 @@ const AddData = () => {
         };
     
         document.body.appendChild(popup);
-    };
-
-    const showUserSelection = (entry) => {
-        // Create user selection popup
-        const userSelection = document.createElement('div');
-        userSelection.className = styles.userSelection;
     
-        let selectedUser = ''; // Local state for selected user
-    
-        // Set the inner HTML content
-        userSelection.innerHTML = `
-            <h3 class="${styles.popupTitle}">Select User:</h3>
-            <select id="userSelect" class="${styles.userSelect}">
-                <option value="">Select a user</option>
-                ${users.map(user => `<option value="${user.id}">${user.username}</option>`).join('')}
-            </select>
-            <button id="sendButton" class="${styles.sendButton}">Send</button>
-            <button id="cancelButton" class="${styles.cancelButton}">Cancel</button>
-        `;
-    
-        // Append the popup to the body
-        document.body.appendChild(userSelection);
-    
-        // Cache DOM elements for better performance
-        const userSelect = userSelection.querySelector('#userSelect');
-        const sendButton = userSelection.querySelector('#sendButton');
-        const cancelButton = userSelection.querySelector('#cancelButton');
-    
-        // Handle user selection change
-        userSelect.addEventListener('change', (e) => {
-            selectedUser = e.target.value; // Update local state
-        });
-    
-        // Handle send button click
-        sendButton.addEventListener('click', () => {
-            if (selectedUser) {
-                sendMessage('user1', entry, selectedUser); // Send message
-                document.body.removeChild(userSelection);  // Remove popup
-            } else {
-                alert('Please select a user'); // Ensure a user is selected
-            }
-        });
-    
-        // Handle cancel button click
-        cancelButton.addEventListener('click', () => {
-            document.body.removeChild(userSelection); // Remove popup on cancel
-        });
-    };
-    
-
-    const sendMessage = (role, entry, userId = null) => {
-        let message = '';
-        const today = new Date();
-        const currentDate = `${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}`;
-        const sortedCodes = sortCodes(entry.codes);
-        const totalItem = sortedCodes.length;
-      
-        if (role === 'user1') {
-            message = `
-ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
-ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
-${currentDate} ໄດ້ຜ່ານ:
-https://akp-logistics.vercel.app/
-            `;
-
-            // Send notification to selected user
-            axios.post(`${config.apiUrl}/admin/sendDataNotiUser`, {
-                userId: userId,
-                entryData: entry
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
-                 'Content-Type': 'application/json'
-            })
-            .then(() => {
-                alert('Notification sent successfully!');
-            })
-            .catch(error => {
-                console.error('Error sending notification:', error);
-                alert('Failed to send notification. Please try again.');
-            });
-        } else {
-              const formattedCodes = sortedCodes.map((code, idx) => {
+        const sendMessage = (role) => {
+            let message = '';
+            const today = new Date();
+            const currentDate = `${today.getDate()}.${today.getMonth() + 1}.${today.getFullYear()}`;
+            const sortedCodes = sortCodes(entry.codes);
+            const totalItem = sortedCodes.length;
+            const formattedCodes = sortedCodes.map((code, idx) => {
                 const noPart = `${String(idx + 1).padStart(2)}`;
                 const codePart = code.code.padEnd(16, '\u00A0');  // Use non-breaking space
                 const weightPart = code.weight ? `${parseFloat(code.weight).toFixed(1).padStart(2)}kg` : '';
@@ -332,6 +268,20 @@ https://akp-logistics.vercel.app/
               }).join('\n');
           
               const totalPart = `Total:${entry.totalPrice.toLocaleString()}Kip ${(entry.totalWeight)}kg ${(entry.totalM3)}m³`;
+              
+          
+            if (role === 'user1') {
+              message = 
+             `\`\`\`
+ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
+ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
+${currentDate} ໄດ້ຜ່ານ:
+https://akp-logistics.vercel.app/
+${formattedCodes}
+
+${totalPart}
+              \`\`\``;
+            } else {
               
               message = 
                `\`\`\`
@@ -348,7 +298,7 @@ ${totalPart}
             const phoneNumber = `+85620${entry.phoneNumber}`;
             window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`);
         };
-    
+    };
 
     return (
         <div className={styles.container}>
