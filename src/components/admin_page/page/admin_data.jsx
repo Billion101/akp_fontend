@@ -46,35 +46,9 @@ const AddData = () => {
     }, [fetchEntries]);
 
     
-    const handleBarcodeScan = (index) => {
-        // Check if the current input is not empty (barcode scan successful)
-        if (formData.codes[index].code.trim() !== '') {
-            // Add a new empty code entry for the next scan
-            setFormData(prevState => ({
-                ...prevState,
-                codes: [...prevState.codes, { code: '', weight: '', m3: '', color: '' }]
-            }));
-            // Focus the next input field (for the newly created code entry)
-            setTimeout(() => {
-                const nextIndex = index + 1;
-                if (codeRefs.current[nextIndex]) {
-                    codeRefs.current[nextIndex].focus();
-                }
-            }, 0);
-        }
-    };
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-    const updatedCodes = [...formData.codes];
-    updatedCodes[index][name] = value;
-
-    setFormData(prevState => ({ ...prevState, codes: updatedCodes }));
-
-    // If the input is a code and the value changes, handle barcode scan
-    if (name === 'code') {
-        handleBarcodeScan(index);
-    }
+        setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
     const handleCodeChange = (index, field, value) => {
@@ -227,6 +201,11 @@ const AddData = () => {
             if (!a.m3 && b.m3) return -1;
             return 0;
         });
+    };
+    const formatPrice = (price) => {
+        if (!price) return '0.00 Kip';
+        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `${formattedPrice} Kip`;
     };
 
     const sendWhatsAppMessage = (entry) => {
@@ -482,7 +461,7 @@ ${totalPart}
                         </tbody>
                     </table>
                     <div className={styles.totalInfo}>
-                        <p>Total Price: {entry.totalPrice} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
+                        <p>Total Price: {formatPrice(entry.totalPrice)} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
                     </div>
                     <button onClick={() => startEditing(entry)} className={`${styles.actionButton} ${styles.editButton}`}>
                     <FontAwesomeIcon icon={faEdit}className={styles.icon} />

@@ -15,9 +15,13 @@ const HomeAdmin = () => {
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [adminPassword, setAdminPassword] = useState('');
     const [clickedNote, setClickedNote] = useState(null);
+    const [totalPrices, setTotalPrices] = useState({});
+    const [loading, setLoading] = useState(true);  // Loading state
+
     const handleClick = (id) => {
         setClickedNote(id);
     };
+
     const handleLogout = useCallback(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
@@ -26,37 +30,67 @@ const HomeAdmin = () => {
 
     useEffect(() => {
         // Fetch existing notes when the component mounts
-        axios.get(`${config.apiUrl}/admin/getAdminDay`, {
+        const fetchNotes = async () => {
+            try {
+                const response = await axios.get(`${config.apiUrl}/admin/getAdminDay`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                setNotes(response.data);
+                // Fetch total prices for each note
+                await Promise.all(response.data.map(note => fetchTotalPrice(note.id)));
+            } catch (error) {
+                console.error('There was an error fetching the days!', error);
+            } finally {
+                setLoading(false);  // Set loading to false after fetching
+            }
+        };
+
+        fetchNotes();
+    }, []);
+
+    const fetchTotalPrice = (dayId) => {
+        axios.get(`${config.apiUrl}/admin/totalAdminPrice/${dayId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
         .then(response => {
-            setNotes(response.data);
+            setTotalPrices(prevState => ({
+                ...prevState,
+                [dayId]: response.data.total_sum  // Store the total sum for this day
+            }));
         })
         .catch(error => {
-            console.error('There was an error fetching the days!', error);
+            console.error(`There was an error fetching the total price for day ${dayId}!`, error);
         });
-    }, []);
+    };
 
-    const addDay = () => {
+    const formatPrice = (price) => {
+        if (!price) return '0.00 Kip'; // Return '0.00 Kip' if no price is available
+        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `${formattedPrice} Kip`; // Append ' Kip' to the formatted price
+    };
+    
+
+    const addDay = async () => {
         if (!date) {
             alert('Please select a date.');
             return;
         }
 
-        axios.post(`${config.apiUrl}/admin/addAdminDay`, { date }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-        .then(response => {
+        try {
+            const response = await axios.post(`${config.apiUrl}/admin/addAdminDay`, { date }, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             setNotes([...notes, { id: response.data.dayId, date }]);
             setDate(''); // Clear the input
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('There was an error adding the day!', error);
-        });
+        }
     };
 
     const handleDelete = (dayId) => {
@@ -64,20 +98,19 @@ const HomeAdmin = () => {
         setShowModal(true);  // Show confirmation modal
     };
 
-    const confirmDelete = () => {
+    const confirmDelete = async () => {
         if (selectedDayId) {
-            axios.delete(`${config.apiUrl}/admin/deleteAdminDay/${selectedDayId}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(() => {
+            try {
+                await axios.delete(`${config.apiUrl}/admin/deleteAdminDay/${selectedDayId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 setNotes(notes.filter(note => note.id !== selectedDayId));
                 setShowModal(false);  // Close the modal after deletion
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('There was an error deleting the day!', error);
-            });
+            }
         }
     };
 
@@ -91,13 +124,13 @@ const HomeAdmin = () => {
         setShowPasswordModal(true);
     };
 
-    const verifyAdminPassword = () => {
-        axios.post(`${config.apiUrl}/admin/verifyAdminPassword`, { password: adminPassword }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-        .then(response => {
+    const verifyAdminPassword = async () => {
+        try {
+            const response = await axios.post(`${config.apiUrl}/admin/verifyAdminPassword`, { password: adminPassword }, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             if (response.data.isValid) {
                 setShowPasswordModal(false);
                 setAdminPassword('');
@@ -105,21 +138,20 @@ const HomeAdmin = () => {
             } else {
                 alert('Incorrect password. Please try again.');
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('Error verifying password:', error);
             alert('An error occurred. Please try again.');
-        });
+        }
     };
 
     return (
         <div className={styles.container}>
             <nav className={styles.navbar}>
                 <div className={styles.navContent}>
-                <div className={styles.nameLogo}>
-                <img src={logo} alt="AKP" className={styles.logo} />
-                <h2 className={styles.title}>Admin Page</h2>
-                </div>
+                    <div className={styles.nameLogo}>
+                        <img src={logo} alt="AKP" className={styles.logo} />
+                        <h2 className={styles.title}>Admin Page</h2>
+                    </div>
                     <div>
                         <a href="/manage-users" onClick={handleManageUsersClick} className={styles.link}>Manage Users</a>
                         <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
@@ -142,35 +174,36 @@ const HomeAdmin = () => {
                 </div>
 
                 <div className={styles.notesGrid}>
-    {notes.map((note) => (
-        <div
-            key={note.id}
-            className={`${styles.noteCard} ${clickedNote === note.id ? styles.clicked : ''}`}
-            onClick={() => handleClick(note.id)}
-        >
-            <div className={styles.noteContent}>
-                <div className={styles.dateBox}>
-                    {new Date(note.date).toLocaleDateString()}
+                    {notes.map((note) => (
+                        <div
+                            key={note.id}
+                            className={`${styles.noteCard} ${clickedNote === note.id ? styles.clicked : ''}`}
+                            onClick={() => handleClick(note.id)}
+                        >
+                            <div className={styles.noteContent}>
+                                <div className={styles.dateBox}>
+                                    {new Date(note.date).toLocaleDateString()}
+                                </div>
+                                <Link
+                                    to={`/add-data/${note.id}`}
+                                    className={styles.noteLink}
+                                    state={{ date: note.date }}
+                                >
+                                    <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(note.id)}
+                                    className={`${styles.button} ${styles.deleteButton}`}
+                                >
+                                    Delete
+                                </button>
+                                <div className={styles.totalPrice}>
+                                    Total Price: {loading ? 'Loading...' : formatPrice(totalPrices[note.id])}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                <Link
-                 to={`/add-data/${note.id}`}
-                  className={styles.noteLink}
-                  state={{ date: note.date }}
-                  >
-                    <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
-                </Link>
-                <button
-                    onClick={() => handleDelete(note.id)}
-                    className={`${styles.button} ${styles.deleteButton}`}
-                >
-                    Delete
-                </button>
-            </div>
-        </div>
-    ))}
-</div>
-
-
             </main>
 
             {/* Confirmation Modal for Delete */}
@@ -199,14 +232,14 @@ const HomeAdmin = () => {
                             placeholder="Enter admin password"
                         />
                         <div className={styles.modalActions}>
-                            <button 
-                                onClick={() => setShowPasswordModal(false)} 
+                            <button
+                                onClick={() => setShowPasswordModal(false)}
                                 className={`${styles.modalButton} ${styles.cancelButton}`}
                             >
                                 Cancel
                             </button>
-                            <button 
-                                onClick={verifyAdminPassword} 
+                            <button
+                                onClick={verifyAdminPassword}
                                 className={`${styles.modalButton} ${styles.confirmButton}`}
                             >
                                 Verify

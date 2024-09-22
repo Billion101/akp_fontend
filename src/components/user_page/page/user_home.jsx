@@ -15,6 +15,10 @@ const UserHome = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedDayId, setSelectedDayId] = useState(null); 
     const [clickedNote, setClickedNote] = useState(null);
+    const [totalPrices, setTotalPrices] = useState({});
+    const [loading, setLoading] = useState(true); // Initialize loading state
+
+
     const handleClick = (id) => {
         setClickedNote(id);
     };
@@ -26,6 +30,7 @@ const UserHome = () => {
     }, [navigate]);
 
     useEffect(() => {
+        setLoading(true);
         // Fetch existing notes when the component mounts
         axios.get(`${config.apiUrl}/user/getUserDay`, {
             headers: {
@@ -34,11 +39,39 @@ const UserHome = () => {
         })
             .then(response => {
                 setNotes(response.data);
+                response.data.forEach(note => fetchTotalPrice(note.id));
             })
             .catch(error => {
                 console.error('There was an error fetching the days!', error);
+                
+            })
+            .finally(() => {
+                setLoading(false); // Set loading to false when fetching is done
             });
     }, [token]);
+
+    const fetchTotalPrice = (dayId) => {
+        axios.get(`${config.apiUrl}/user/totalUserPrice/${dayId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(response => {
+            setTotalPrices(prevState => ({
+                ...prevState,
+                [dayId]: response.data.total_sum
+            }));
+        })
+        .catch(error => {
+            console.error(`There was an error fetching total price for day ${dayId}!`, error);
+        });
+    };
+
+    const formatPrice = (price) => {
+        if (!price) return '0.00 Kip';
+        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `${formattedPrice} Kip`;
+    };
 
     const addDay = () => {
         if (!date) {
@@ -136,6 +169,9 @@ const UserHome = () => {
                 >
                     Delete
                 </button>
+                <div className={styles.totalPrice}>
+                                    Total Price: {loading ? 'Loading...' : formatPrice(totalPrices[note.id])}
+                                </div>
             </div>
         </div>
     ))}
