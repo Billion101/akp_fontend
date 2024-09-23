@@ -129,7 +129,7 @@ const UserHome = () => {
                 <h2 className={styles.navbarTitle}>User Page</h2>
                 </div>
                
-                <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
+                <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Log Out</button>
             </nav>
 
             <main className={styles.main}>

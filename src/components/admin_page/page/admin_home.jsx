@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import styles from '../style/ad_home.module.css';
 import config from '../../../config';
 import akp_icon from '../../../assets/akp-box.png';
-import logo from '../../../assets/akp-logo.png';
+import logo from '../../../assets/akp-icon.jpg';
 
 const HomeAdmin = () => {
     const navigate = useNavigate();
@@ -154,7 +154,7 @@ const HomeAdmin = () => {
                     </div>
                     <div>
                         <a href="/manage-users" onClick={handleManageUsersClick} className={styles.link}>Manage Users</a>
-                        <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Logout</button>
+                        <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Log Out</button>
                     </div>
                 </div>
             </nav>

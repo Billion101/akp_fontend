@@ -21,7 +21,9 @@
     font-weight: bold;
     font-size: 16px;
 }
-
+.navLink:hover{
+    color: black;
+}
 .logoutButton {
     background-color: #ff3300; 
     border: none;
@@ -91,7 +93,7 @@
     font-size: 14px;
 }
 .saveButton{
-    background-color: #3def25;
+    background-color: #20bf0b;
     border: none;
     color: #ffffff;
     padding: 6px 12px;

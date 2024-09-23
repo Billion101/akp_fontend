@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from '../style/ad_ma.module.css';
 import config from '../../../config';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
     const [newUser, setNewUser] = useState({ username: '', password: '' });
@@ -87,8 +89,10 @@ const ManageUsers = () => {
     return (
         <div className = {styles.container}>
             <nav className={styles.navbar}>
-                <Link to="/home-admin" className={styles.navLink}>Back to Admin</Link>
-                <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+                <Link to="/home-admin" className={styles.navLink}>
+                <FontAwesomeIcon icon={faArrowLeft} />Back to Admin
+                </Link>
+                <button onClick={handleLogout} className={styles.logoutButton}>Log Out</button>
             </nav>
 
             <h2 className={styles.title}>Manage Users</h2>
