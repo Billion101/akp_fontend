@@ -230,6 +230,11 @@ const HomeAdmin = () => {
                             onChange={(e) => setAdminPassword(e.target.value)}
                             className={styles.passwordInput}
                             placeholder="Enter admin password"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    verifyAdminPassword();
+                                }
+                            }}
                         />
                         <div className={styles.modalActions}>
                             <button

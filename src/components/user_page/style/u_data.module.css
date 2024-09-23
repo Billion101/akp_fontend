@@ -66,37 +66,48 @@
   
 
   .input {
-    width: 100%;
+    display: block;
+    width: 30%;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
     border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: 5px;
+    font-size: 16px;
   }
-  
-  .table {
+  .tableInput {
+    width: 90%; /* Adjust input width */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding and border are included in width */
+}
+
+.table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-  }
-  
-  .table th, .table td {
+}
+
+.table th, .table td {
     border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
-  }
-  
-  .table th {
+    text-align: center; /* Center the content horizontally */
+    vertical-align: middle; /* Center the content vertically */
+}
+
+.table th {
     background-color: #f2f2f2;
     font-weight: bold;
-  }
+}
+
+.totalPrice{
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
   
-  .tableInput {
-    width: 150px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
+  
   
   .buttonGroup {
     display: flex;
@@ -114,7 +125,7 @@
   }
   
   .addButton {
-    background-color: #3498db;
+    background-color: #2ecc71;
     color: white;
   }
   
@@ -137,7 +148,7 @@
   .deleteButton {
     background-color: #e74c3c;
     color: white;
-    padding: 5px 10px;
+    padding: 10px 15px;
   }
   
   .editButton {
@@ -157,18 +168,16 @@
   .totalPrice, .totals {
     margin-bottom: 20px;
   }
-  
-  .totalItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    width: 250px;
-  }
-  
-  .totalItem label {
-    margin-right: 10px;
-    font-weight: bold;
-  }
+ .totalItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.totalItem label {
+  margin-right: 10px;
+  font-weight: bold;
+}
   
   .entryCard {
     background-color: #f9f9f9;
@@ -197,10 +206,20 @@
     color: #34495e;
   }
   
-  .entryActions {
+
+  .actionbtn {
     display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 10px;
-    font-size: 14px;
+    justify-content: space-between; /* This will push leftButtons to the left and rightButtons to the right */
+    align-items: center;
+    width: 100%; /* Optional: adjust if needed */
   }
+  
+  .leftButtons {
+    display: flex;
+    gap: 10px; /* Adjust spacing between Edit and WhatsApp buttons */
+  }
+  
+  .rightButtons {
+    display: flex;
+  }
+  

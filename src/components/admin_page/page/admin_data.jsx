@@ -55,20 +55,24 @@ const AddData = () => {
         const newCodes = [...formData.codes];
         newCodes[index][field] = value;
         setFormData(prevState => ({ ...prevState, codes: newCodes }));
-
-        if (!isEditing && field === 'code' && index === formData.codes.length - 1 && value !== '') {
-            setFormData(prevState => ({
-                ...prevState,
-                codes: [...prevState.codes, { code: '', weight: '', m3: '', color: '' }]
-            }));
-            setTimeout(() => {
-                if (codeRefs.current[index + 1]) {
-                    codeRefs.current[index + 1].focus();
-                }
-            }, 0);
-        }
-
+    
         updateTotals(newCodes);
+    };
+    const handleCodeKeyPress = (e, index) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();  // Prevent the default form submission
+            if (formData.codes[index].code.trim() !== '') {
+                setFormData(prevState => ({
+                    ...prevState,
+                    codes: [...prevState.codes, { code: '', weight: '', m3: '', color: '' }]
+                }));
+                setTimeout(() => {
+                    if (codeRefs.current[index + 1]) {
+                        codeRefs.current[index + 1].focus();
+                    }
+                }, 0);
+            }
+        }
     };
 
     const updateTotals = (newCodes) => {
@@ -153,12 +157,16 @@ const AddData = () => {
     };
 
     const deleteRow = (index) => {
-        if (isEditing && formData.codes.length > 1) {
-            const newCodes = formData.codes.filter((_, i) => i !== index);
-            setFormData(prevState => ({ ...prevState, codes: newCodes }));
-            updateTotals(newCodes);
+        const newCodes = formData.codes.filter((_, i) => i !== index);
+        setFormData(prevState => ({ ...prevState, codes: newCodes }));
+        updateTotals(newCodes);
+    
+        if (isEditing && formData.codes[index].id) {
+            // If in edit mode and the code has an id (i.e., it's saved in the database), delete it from the server.
+            deleteCode(formData.codes[index].id);
         }
     };
+    
 
     const deleteCode = (codeId) => {
         if (isEditing) {
@@ -251,15 +259,12 @@ const AddData = () => {
           
             if (role === 'user1') {
               message = 
-             `\`\`\`
+             `
 ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
 ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
 ${currentDate} ໄດ້ຜ່ານ:
 https://akp-logistics.vercel.app/
-${formattedCodes}
-
-${totalPart}
-              \`\`\``;
+`;
             } else {
               
               message = 
@@ -283,7 +288,8 @@ ${totalPart}
         <div className={styles.container}>
              <nav className={styles.navbar}>
         <Link to="/home-admin" className={styles.backButton}>
-          <FontAwesomeIcon icon={faArrowLeft} /> Back to Homepage
+          <FontAwesomeIcon icon={faArrowLeft} />
+           Back to Homepage
         </Link>
         <div className={styles.dateDisplay}>
                  Date: {selectedDate}
@@ -308,7 +314,7 @@ ${totalPart}
                     value={formData.userName}
                     onChange={handleInputChange}
                     placeholder="User Name"
-                    className={styles.input}
+                    className={styles.inputUP}
                 />
                 <input
                     type="text"
@@ -316,7 +322,7 @@ ${totalPart}
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                     placeholder="Phone Number"
-                    className={styles.input}
+                    className={styles.inputUP}
                 />
                 <table className={styles.table}>
                     <thead>
@@ -326,7 +332,7 @@ ${totalPart}
                             <th>Weight</th>
                             <th>M3</th>
                             <th>Color</th>
-                            {isEditing && <th>Action</th>}
+                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -334,14 +340,15 @@ ${totalPart}
                             <tr key={index}>
                                 <td style={{ color: code.color || 'black' }}>{index + 1}</td>
                                 <td>
-                                    <input
-                                        ref={(el) => codeRefs.current[index] = el}
-                                        type="text"
-                                        value={code.code}
-                                        onChange={(e) => handleCodeChange(index, 'code', e.target.value)}
-                                        style={{ color: code.color || 'black' }}
-                                        className={styles.input}
-                                    />
+                                <input
+        ref={(el) => codeRefs.current[index] = el}
+        type="text"
+        value={code.code}
+        onChange={(e) => handleCodeChange(index, 'code', e.target.value)}
+        onKeyPress={(e) => handleCodeKeyPress(e, index)}
+        style={{ color: code.color || 'black' }}
+        className={styles.input}
+    />
                                 </td>
                                 <td>
                                     <input
@@ -372,7 +379,7 @@ ${totalPart}
                                         <option value="blue">Blue</option>
                                     </select>
                                 </td>
-                                {isEditing && (
+                                {/* {isEditing && ( */}
                                     <td>
                                         <button 
                                             onClick={() => code.id ? deleteCode(code.id) : deleteRow(index)}
@@ -383,7 +390,7 @@ ${totalPart}
                                             <FontAwesomeIcon icon={faTrash} className={styles.icon} />
                                         </button>
                                     </td>
-                                )}
+                                {/* )} */}
                             </tr>
                         ))}
                     </tbody>
@@ -392,7 +399,7 @@ ${totalPart}
                 {isEditing && (
                     <button 
                         onClick={addNewRow}
-                        className={`${styles.actionButton} ${styles.button}`}
+                        className={styles.addButton}
                         type="button"
                     >
                         <FontAwesomeIcon icon={faPlus} className={styles.icon} /> Add New Column
@@ -407,7 +414,7 @@ ${totalPart}
                         name="totalPrice"
                         value={formData.totalPrice}
                         onChange={handleInputChange}
-                        className={styles.input}
+                        className={styles.totalPrice}
                     />
               </div>
               <div className={styles.totalItem}>
@@ -421,11 +428,11 @@ ${totalPart}
           </div>
 
                 <div className={styles.funcbtn}>
-                <button type="submit" className={styles.button}>
+                <button type="submit" className={styles.savebutton}>
                 <FontAwesomeIcon icon={faSave} /> {isEditing ? 'Save Edit' : 'Save'}
                 </button>
                 {isEditing && (
-                    <button onClick={resetForm} className={`${styles.button} ${styles.cancelButton}`} type="button">
+                    <button onClick={resetForm} className={styles.cancelButton} type="button">
                         <FontAwesomeIcon icon={faTimes} />Cancel
                     </button>
                 )}
@@ -434,7 +441,7 @@ ${totalPart}
 
             {filteredEntries.map((entry, index) => (
                 <div key={index} className={styles.entryContainer}>
-                    <h4 className={styles.entryHeader}>User: {entry.userName}</h4>
+                    <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
                     <p>Phone: {entry.phoneNumber}</p>
                     <table className={styles.entryTable}>
                         <thead>
@@ -463,18 +470,25 @@ ${totalPart}
                     <div className={styles.totalInfo}>
                         <p>Total Price: {formatPrice(entry.totalPrice)} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
                     </div>
-                    <button onClick={() => startEditing(entry)} className={`${styles.actionButton} ${styles.editButton}`}>
-                    <FontAwesomeIcon icon={faEdit}className={styles.icon} />
-                        Edit
-                    </button>
-                    <button onClick={() => sendWhatsAppMessage(entry)} className={`${styles.actionButton} ${styles.whatsappButton}`}>
-                        <FontAwesomeIcon icon={faWhatsapp} className={styles.icon} />
-                        Send to WhatsApp
-                    </button>
-                    <button onClick={() => deleteEntry(entry.id)} className={`${styles.actionButton} ${styles.deleteButton}`}>
-                            <FontAwesomeIcon icon={faTrash} className={styles.icon} />
-                            Delete
-                        </button>
+                    <div className={styles.actionbtn}>
+    <div className={styles.leftButtons}>
+        <button onClick={() => startEditing(entry)} className={`${styles.actionButton} ${styles.editButton}`}>
+            <FontAwesomeIcon icon={faEdit} className={styles.icon} />
+            Edit
+        </button>
+        <button onClick={() => sendWhatsAppMessage(entry)} className={`${styles.actionButton} ${styles.whatsappButton}`}>
+            <FontAwesomeIcon icon={faWhatsapp} className={styles.icon} />
+            Send to WhatsApp
+        </button>
+    </div>
+    <div className={styles.rightButtons}>
+        <button onClick={() => deleteEntry(entry.id)} className={`${styles.actionButton} ${styles.deleteButton}`}>
+            <FontAwesomeIcon icon={faTrash} className={styles.icon} />
+            Delete
+        </button>
+    </div>
+</div>
+
                 </div>
             ))}
         </div>

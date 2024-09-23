@@ -52,20 +52,19 @@ const UserAddData = () => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleCodeChange = (index, field, value) => {
-      const newCodes = [...formData.codes];
-      newCodes[index][field] = value;
-      setFormData(prev => ({ ...prev, codes: newCodes }));
-
-      // Only auto-create new column when not in edit mode
-      if (!editMode && field === 'code' && index === formData.codes.length - 1 && value !== '') {
-          setFormData(prev => ({
-              ...prev,
-              codes: [...newCodes, { code: '', weight: '', m3: '', color: '#000000' }]
-          }));
-          setTimeout(() => codeRefs.current[index + 1]?.focus(), 0);
-      }
-  };
+    const handleCodeChange = (index, field, value, event) => {
+        const newCodes = [...formData.codes];
+        newCodes[index][field] = value;
+        setFormData(prev => ({ ...prev, codes: newCodes }));
+    
+        // Check if 'Enter' key was pressed and create a new column
+        if (event.key === 'Enter' && field === 'code' && value !== '') {
+            addNewColumn();
+            setTimeout(() => codeRefs.current[index + 1]?.focus(), 0);
+        }
+    };
+    
+   
 
     const checkAllCodes = () => {
         const filteredCodes = formData.codes.filter(code => code.code !== '');
@@ -165,16 +164,11 @@ const UserAddData = () => {
     };
 
     const addNewColumn = () => {
-      setFormData(prev => ({
-          ...prev,
-          codes: [...prev.codes, { code: '', weight: '', m3: '', color: '#000000' }]
-      }));
-      // Focus on the new input after a short delay to ensure the DOM has updated
-      setTimeout(() => {
-          const newIndex = formData.codes.length;
-          codeRefs.current[newIndex]?.focus();
-      }, 0);
-  };
+        setFormData(prev => ({
+            ...prev,
+            codes: [...prev.codes, { code: '', weight: '', m3: '', color: '#000000' }]
+        }));
+    };
 
     const deleteCode = (index) => {
         const codeToDelete = formData.codes[index];
@@ -240,6 +234,11 @@ const UserAddData = () => {
             if (error.response?.status === 403) navigate('/');
         });
     };
+    const formatPrice = (price) => {
+        if (!price) return '0.00 Kip';
+        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return `${formattedPrice} Kip`;
+    };
 
     const sendWhatsAppMessage = (entry) => {
         const sortedCodes = [...entry.codes].sort((a, b) => {
@@ -252,10 +251,10 @@ const UserAddData = () => {
         
         const currentDate = new Date().toLocaleDateString('en-GB');
         const formattedCodes = sortedCodes.map((code, idx) => 
-            `${String(idx + 1).padStart(2)} ${code.code.padEnd(16, '\u00A0')}${code.weight ? `${parseFloat(code.weight).toFixed(1).padStart(2)}kg` : ''}${code.m3 ? `${parseFloat(code.m3).toFixed(4).padStart(2)}m³` : ''}`
+            `${String(idx + 1).padStart(2)} ${code.code.padEnd(16, '\u00A0')}${code.weight ? `${parseFloat(code.weight).toFixed(2).padStart(2)}kg` : ''}${code.m3 ? `${parseFloat(code.m3).toFixed(4).padStart(2)}m³` : ''}`
         ).join('\n');
 
-        const totalPart = `Total: ${entry.totalPrice.toLocaleString()}Kip  ${parseFloat(entry.totalWeight).toFixed(1)}kg ${parseFloat(entry.totalM3).toFixed(1)}m³`;
+        const totalPart = `Total: ${entry.totalPrice.toLocaleString()}Kip  ${parseFloat(entry.totalWeight).toFixed(2)}kg ${parseFloat(entry.totalM3).toFixed(4)}m³`;
         
         const message = `\`\`\`
 ມື້ນີ້ມີພັດສະດຸທ່ານເຂົ້າ ${sortedCodes.length} ລາຍການ
@@ -295,7 +294,7 @@ ${totalPart}
                       <th>Code</th>
                       <th>Weight</th>
                       <th>M3</th>
-                      {editMode && <th>Actions</th>}
+                        <th>Delete</th>
                   </tr>
               </thead>
               <tbody>
@@ -303,14 +302,15 @@ ${totalPart}
                       <tr key={index} style={{ color: code.color }}>
                           <td>{index + 1}</td>
                           <td>
-                              <input
-                                  ref={(el) => (codeRefs.current[index] = el)}
-                                  type="text"
-                                  value={code.code}
-                                  onChange={(e) => handleCodeChange(index, 'code', e.target.value)}
-                                  className={styles.tableInput}
-                                  style={{ color: code.color }}
-                              />
+                          <input
+        ref={(el) => (codeRefs.current[index] = el)}
+        type="text"
+        value={code.code}
+        onChange={(e) => handleCodeChange(index, 'code', e.target.value, e)}
+        onKeyDown={(e) => handleCodeChange(index, 'code', e.target.value, e)} // Listen to keydown events
+        className={styles.tableInput}
+        style={{ color: code.color }}
+    />
                           </td>
                           <td>
                               <input
@@ -332,13 +332,13 @@ ${totalPart}
                                   style={{ color: code.color }}
                               />
                           </td>
-                          {editMode && (
+                          {/* {editMode && ( */}
                               <td>
                                   <button onClick={() => deleteCode(index)} className={styles.deleteButton}>
                                       <FontAwesomeIcon icon={faTrash} />
                                   </button>
                               </td>
-                          )}
+                          {/* )} */}
                       </tr>
                   ))}
               </tbody>
@@ -358,7 +358,7 @@ ${totalPart}
                       type="number"
                       value={formData.totalPrice}
                       onChange={(e) => handleInputChange('totalPrice', parseFloat(e.target.value))}
-                      className={styles.input}
+                      className={styles.totalPrice}
                   />
               </div>
               <div className={styles.totalItem}>
@@ -391,7 +391,7 @@ ${totalPart}
       <div className={styles.entriesSection}>
           {filteredEntries.map(entry => (
               <div key={entry.id} className={styles.entryCard}>
-                  <h4 className={styles.entryHeader}>User: {entry.userName}</h4>
+                  <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
                   <p>Phone: {entry.phoneNumber}</p>
                   <table className={styles.table}>
                       <thead>
@@ -424,18 +424,22 @@ ${totalPart}
                       </tbody>
                   </table>
                   <div className={styles.entryTotals}>
-                  <p>Total Price: {entry.totalPrice} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
+                  <p>Total Price: {formatPrice(entry.totalPrice)} | Total Weight: {entry.totalWeight} | Total M3: {entry.totalM3}</p>
                   </div>
-                  <div className={styles.entryActions}>
+                  <div className={styles.actionbtn}>
+                      <div className={styles.leftButtons}>
                       <button onClick={() => handleEditClick(entry)} className={styles.editButton}>
                           <FontAwesomeIcon icon={faEdit} /> Edit
                       </button>
                       <button onClick={() => sendWhatsAppMessage(entry)} className={styles.whatsappButton}>
                           <FontAwesomeIcon icon={faWhatsapp} /> Send WhatsApp
                       </button>
+                      </div>
+                      <div className={styles.rightButtons}>
                       <button onClick={() => deleteEntry(entry.id)} className={styles.deleteButton}>
                             <FontAwesomeIcon icon={faTrash} /> Delete
                         </button>
+                      </div>
                   </div>
               </div>
           ))}
