@@ -16,23 +16,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post(`${config.apiUrl}/auth/login`, { username, password }, { withCredentials: true }); // Add withCredentials: true
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('role', response.data.role);
-        
-        if (response.data.role === 'admin') {
-            navigate('/home-admin');
-        } else {
-            navigate('/home-user');
-        }
-        
-        setErrorMessage(''); 
+      const response = await axios.post(`${config.apiUrl}/auth/login`, { username, password });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('role', response.data.role);
+      if (response.data.role === 'admin') {
+        navigate('/home-admin');
+      } else {
+        navigate('/home-user');
+      }
+      setErrorMessage(''); 
     } catch (error) {
-        setErrorMessage('Incorrect username or password'); 
-        console.error('Error logging in', error); // Log the error for debugging
+      setErrorMessage('Incorrect username or password'); 
+      console.error('Error logging in');
     }
-};
-
+  };
 
   return (
     <div className={styles.container}>
