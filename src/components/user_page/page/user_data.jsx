@@ -349,7 +349,7 @@ ${totalPart}
                       <FontAwesomeIcon icon={faPlus} /> Add New Column
                   </button>
               )}
-              
+              <button onClick={checkAllCodes} className={styles.checkButton}>Check All Codes</button>
           </div>
           <div className={styles.totals}>
               <div className={styles.totalItem}>
@@ -370,35 +370,20 @@ ${totalPart}
                   <span>{formData.totalM3}</span>
               </div>
           </div>
-          <div className={styles.buttonGroup}>
-  {editMode ? (
-    <div className={styles.buttonGroup}>
-      <div className={styles.saveAndCheckContainer}>
-        <button onClick={saveEdit} className={styles.saveButton}>
-          <FontAwesomeIcon icon={faSave} /> Save Edit
-        </button>
-        <button onClick={checkAllCodes} className={styles.checkButton}>
-          Check All Codes
-        </button>
-      </div>
-      <button onClick={resetForm} className={styles.cancelButton}>
-        <FontAwesomeIcon icon={faTimes} /> Cancel
-      </button>
-    </div>
-  ) : (
-    <div className={styles.saveAndCheckContainer}>
-      <button onClick={addUserEntry} className={styles.saveButton}>
-        <FontAwesomeIcon icon={faSave} /> Save Data
-      </button>
-      <button onClick={checkAllCodes} className={styles.checkButton}>
-        Check All Codes
-      </button>
-    </div>
-  )}
-</div>
-
-          
-         
+          {editMode ? (
+              <div className={styles.buttonGroup}>
+                  <button onClick={saveEdit} className={styles.saveButton}>
+                      <FontAwesomeIcon icon={faSave} /> Save Edit
+                  </button>
+                  <button onClick={resetForm} className={styles.cancelButton}>
+                      <FontAwesomeIcon icon={faTimes} /> Cancel
+                  </button>
+              </div>
+          ) : (
+              <button onClick={addUserEntry} className={styles.saveButton}>
+                  <FontAwesomeIcon icon={faSave} /> Save Data
+              </button>
+          )}
       </div>
   );
 
