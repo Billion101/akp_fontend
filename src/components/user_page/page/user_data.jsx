@@ -254,8 +254,8 @@ const UserAddData = () => {
             `${String(idx + 1).padStart(2)} ${code.code.padEnd(16, '\u00A0')}${code.weight ? `${parseFloat(code.weight).toFixed(2).padStart(2)}kg` : ''}${code.m3 ? `${parseFloat(code.m3).toFixed(4).padStart(2)}m³` : ''}`
         ).join('\n');
 
-        const totalPart = `Total: ${entry.totalPrice.toLocaleString()}Kip  ${parseFloat(entry.totalWeight).toFixed(2)}kg ${parseFloat(entry.totalM3).toFixed(4)}m³`;
-        
+        const totalPart = `Total: ${formatPrice(entry.totalPrice)} ${parseFloat(entry.totalWeight).toFixed(2)}kg ${parseFloat(entry.totalM3).toFixed(4)}m³`;
+
         const message = `\`\`\`
 ມື້ນີ້ມີພັດສະດຸທ່ານເຂົ້າ ${sortedCodes.length} ລາຍການ
 ສາມາດກວດສອບລະຫັດເເລະຄ່າຂົນສົ່ງຂອງວັນທີ
@@ -349,7 +349,7 @@ ${totalPart}
                       <FontAwesomeIcon icon={faPlus} /> Add New Column
                   </button>
               )}
-              <button onClick={checkAllCodes} className={styles.checkButton}>Check All Codes</button>
+              
           </div>
           <div className={styles.totals}>
               <div className={styles.totalItem}>
@@ -370,20 +370,35 @@ ${totalPart}
                   <span>{formData.totalM3}</span>
               </div>
           </div>
-          {editMode ? (
-              <div className={styles.buttonGroup}>
-                  <button onClick={saveEdit} className={styles.saveButton}>
-                      <FontAwesomeIcon icon={faSave} /> Save Edit
-                  </button>
-                  <button onClick={resetForm} className={styles.cancelButton}>
-                      <FontAwesomeIcon icon={faTimes} /> Cancel
-                  </button>
-              </div>
-          ) : (
-              <button onClick={addUserEntry} className={styles.saveButton}>
-                  <FontAwesomeIcon icon={faSave} /> Save Data
-              </button>
-          )}
+          <div className={styles.buttonGroup}>
+  {editMode ? (
+    <div className={styles.buttonGroup}>
+      <div className={styles.saveAndCheckContainer}>
+        <button onClick={saveEdit} className={styles.saveButton}>
+          <FontAwesomeIcon icon={faSave} /> Save Edit
+        </button>
+        <button onClick={checkAllCodes} className={styles.checkButton}>
+          Check All Codes
+        </button>
+      </div>
+      <button onClick={resetForm} className={styles.cancelButton}>
+        <FontAwesomeIcon icon={faTimes} /> Cancel
+      </button>
+    </div>
+  ) : (
+    <div className={styles.saveAndCheckContainer}>
+      <button onClick={addUserEntry} className={styles.saveButton}>
+        <FontAwesomeIcon icon={faSave} /> Save Data
+      </button>
+      <button onClick={checkAllCodes} className={styles.checkButton}>
+        Check All Codes
+      </button>
+    </div>
+  )}
+</div>
+
+          
+         
       </div>
   );
 

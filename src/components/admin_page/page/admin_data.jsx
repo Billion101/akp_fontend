@@ -254,7 +254,8 @@ const AddData = () => {
                 return `${noPart} ${codePart}${weightPart}${m3Part}`;
               }).join('\n');
           
-              const totalPart = `Total:${entry.totalPrice.toLocaleString()}Kip ${(entry.totalWeight)}kg ${(entry.totalM3)}m³`;
+              const totalPart = `Total: ${formatPrice(entry.totalPrice)} ${(entry.totalWeight)}kg ${(entry.totalM3)}m³`;
+
               
           
             if (role === 'user1') {
