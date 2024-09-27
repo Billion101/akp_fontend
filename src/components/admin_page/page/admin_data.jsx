@@ -263,7 +263,7 @@ const AddData = () => {
 ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
 ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
 ${currentDate} ໄດ້ຜ່ານ:
-https://akp-logistics.vercel.app/
+https://akplogistics.vercel.app/
 `;
             } else {
               
