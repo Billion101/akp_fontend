@@ -51,16 +51,10 @@ const AddData = () => {
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    const handleCodeChange = (index, field, value) => {
-        const newCodes = [...formData.codes];
-        newCodes[index][field] = value;
-        setFormData(prevState => ({ ...prevState, codes: newCodes }));
     
-        updateTotals(newCodes);
-    };
     const handleCodeKeyPress = (e, index) => {
         if (e.key === 'Enter') {
-            e.preventDefault();  // Prevent the default form submission
+            e.preventDefault();  
             if (formData.codes[index].code.trim() !== '') {
                 setFormData(prevState => ({
                     ...prevState,
@@ -74,25 +68,45 @@ const AddData = () => {
             }
         }
     };
-
+    const handleCodeChange = (index, field, value) => {
+        const newCodes = [...formData.codes];
+        newCodes[index][field] = value;
+        setFormData(prevState => ({ ...prevState, codes: newCodes }));
+        updateTotals(newCodes);
+    };
     const updateTotals = (newCodes) => {
-        const newTotalWeight = newCodes.reduce((sum, code) => sum + Number(code.weight || 0), 0);
-        const newTotalM3 = newCodes.reduce((sum, code) => sum + Number(code.m3 || 0), 0);
+        // Filter out duplicate codes based on the 'code' property
+        const uniqueCodes = newCodes.filter((code, index, self) =>
+            index === self.findIndex((c) => c.code === code.code)
+        );
+    
+        // Calculate total weight and total m3 from the unique codes
+        const newTotalWeight = uniqueCodes.reduce((sum, code) => sum + Number(code.weight || 0), 0);
+        const newTotalM3 = uniqueCodes.reduce((sum, code) => sum + Number(code.m3 || 0), 0);
+    
         setFormData(prevState => ({
             ...prevState,
             totalWeight: newTotalWeight.toFixed(2),
             totalM3: newTotalM3.toFixed(4)
         }));
     };
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Filter out duplicate codes by their 'code' property
+        const uniqueCodes = formData.codes.reduce((acc, currentCode) => {
+            const isDuplicate = acc.find(code => code.code === currentCode.code);
+            return isDuplicate ? acc : [...acc, currentCode];
+        }, []);
+    
         const url = isEditing 
             ? `${config.apiUrl}/admin/updateAdminEntry/${editEntryId}`
             : `${config.apiUrl}/admin/addAdminEntry`;
         const method = isEditing ? 'put' : 'post';
-
-        axios[method](url, { ...formData, dayId }, {
+    
+        axios[method](url, { ...formData, codes: uniqueCodes, dayId }, {
             headers: { Authorization: `Bearer ${token}` },
         }).then(() => {
             fetchEntries();
@@ -102,6 +116,7 @@ const AddData = () => {
             console.error('Error saving or updating the entry:', error);
         });
     };
+    
 
     const handleSearch = (e) => {
         const value = e.target.value.toLowerCase();
@@ -284,6 +299,7 @@ ${totalPart}
             window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`);
         };
     };
+    
 
     return (
         <div className={styles.container}>
@@ -342,14 +358,14 @@ ${totalPart}
                                 <td style={{ color: code.color || 'black' }}>{index + 1}</td>
                                 <td>
                                 <input
-        ref={(el) => codeRefs.current[index] = el}
-        type="text"
-        value={code.code}
-        onChange={(e) => handleCodeChange(index, 'code', e.target.value)}
-        onKeyPress={(e) => handleCodeKeyPress(e, index)}
-        style={{ color: code.color || 'black' }}
-        className={styles.input}
-    />
+                                   ref={(el) => codeRefs.current[index] = el}
+                                   type="text"
+                                   value={code.code}
+                                   onChange={(e) => handleCodeChange(index, 'code', e.target.value)}
+                                   onKeyPress={(e) => handleCodeKeyPress(e, index)}
+                                   style={{ color: code.color || 'black' }}
+                                   className={styles.input}
+                                    />
                                 </td>
                                 <td>
                                     <input
@@ -407,8 +423,8 @@ ${totalPart}
                     </button>
                 )}
 
-            <div className={styles.totals}>
-            <div className={styles.totalItem}>
+              <div className={styles.totals}>
+             <div className={styles.totalItem}>
                     <label>Total Price: </label>
                     <input
                         type="number"
@@ -426,7 +442,7 @@ ${totalPart}
                   <label>Total M3: </label>
                   <span>{formData.totalM3}</span>
               </div>
-          </div>
+             </div>
 
                 <div className={styles.funcbtn}>
                 <button type="submit" className={styles.savebutton}>

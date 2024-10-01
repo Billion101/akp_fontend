@@ -68,48 +68,79 @@ const UserAddData = () => {
 
     const checkAllCodes = () => {
         const filteredCodes = formData.codes.filter(code => code.code !== '');
-        Promise.all(filteredCodes.map(code => 
+    
+        // Fetch code details from API for all unique codes
+        const uniqueCodes = filteredCodes.filter((code, index, self) =>
+            index === self.findIndex((c) => c.code === code.code)
+        );
+    
+        // Create an array to track codes that fail the API call
+        const failedCodes = [];
+    
+        Promise.all(uniqueCodes.map(code =>
             axios.get(`${config.apiUrl}/user/getAdminCode/${code.code}`, {
                 headers: { Authorization: `Bearer ${token}` },
+            }).catch(error => {
+                // Push the code that failed into the failedCodes array
+                failedCodes.push(code.code);
+    
+                // Return null to handle the failure later in .then
+                return null;
             })
         ))
         .then(responses => {
-            const newCodes = formData.codes.map((code, index) => {
+            const newCodes = uniqueCodes.map((code, index) => {
                 const response = responses[index]?.data;
                 return response ? { ...code, ...response, color: response.color || '#000000' } : code;
             });
+    
+            // Calculate the total weight and total M3 for unique codes only
             const newTotalWeight = newCodes.reduce((sum, code) => sum + (parseFloat(code.weight) || 0), 0);
             const newTotalM3 = newCodes.reduce((sum, code) => sum + (parseFloat(code.m3) || 0), 0);
+    
+            // Update formData with new values
             setFormData(prev => ({
                 ...prev,
-                codes: newCodes,
+                codes: newCodes, // This now contains unique codes with updated info
                 totalWeight: newTotalWeight.toFixed(2),
                 totalM3: newTotalM3.toFixed(4)
             }));
+    
+            // If there are failed codes, show a specific error message
+            if (failedCodes.length > 0) {
+                alert(`Error fetching data for the following codes: ${failedCodes.join(', ')}. They may not exist or there was an issue fetching them.`);
+            }
         })
         .catch(error => {
             console.error('Error fetching code data:', error);
-            alert('Error fetching data for one or more codes.');
+            alert('An unexpected error occurred while fetching the codes.');
             if (error.response?.status === 403) navigate('/');
         });
     };
+    
+    
 
-    const addUserEntry = () => {
+    const handleSubmit = () => {
+        // Filter out empty codes and remove duplicates
         const filteredCodes = formData.codes.filter(code => code.code !== '');
+        const uniqueCodes = filteredCodes.filter((code, index, self) =>
+            index === self.findIndex((c) => c.code === code.code)
+        );
+    
         axios.post(`${config.apiUrl}/user/addUserEntry`, {
             dayId,
             userName: formData.userName,
             phoneNumber: formData.phoneNumber,
             totalPrice: formData.totalPrice,
-            totalWeight: formData.totalWeight,
-            totalM3: formData.totalM3
+            totalWeight: formData.totalWeight, // Total from unique codes
+            totalM3: formData.totalM3 // Total from unique codes
         }, {
             headers: { Authorization: `Bearer ${token}` },
         })
         .then(response => {
             return axios.post(`${config.apiUrl}/user/addUserCode`, {
                 entryId: response.data.entryId,
-                codes: filteredCodes
+                codes: uniqueCodes // Submit only unique codes
             }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -125,7 +156,33 @@ const UserAddData = () => {
             else alert('An error occurred. Please try again later.');
         });
     };
-
+    
+    
+    const handlesaveEdit = () => {
+        // Filter out empty codes and remove duplicates
+        const filteredCodes = formData.codes.filter(code => code.code !== '');
+        const uniqueCodes = filteredCodes.filter((code, index, self) =>
+            index === self.findIndex((c) => c.code === code.code)
+        );
+    
+        axios.put(`${config.apiUrl}/user/updateUserEntry/${editEntryId}`, {
+            ...formData,
+            codes: uniqueCodes // Send only unique codes
+        }, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
+            fetchEntries();
+            alert('Entry updated successfully!');
+            resetForm();
+        })
+        .catch(error => {
+            console.error('Error updating entry:', error);
+            if (error.response?.status === 403) navigate('/');
+        });
+    };
+    
+    
     const resetForm = () => {
         setFormData({
             userName: '',
@@ -172,34 +229,32 @@ const UserAddData = () => {
 
     const deleteCode = (index) => {
         const codeToDelete = formData.codes[index];
+        const updateCodes = (newCodes) => {
+            setFormData(prev => ({
+                ...prev,
+                codes: newCodes,
+                totalWeight: newCodes.reduce((sum, code) => sum + (parseFloat(code.weight) || 0), 0).toFixed(2),
+                totalM3: newCodes.reduce((sum, code) => sum + (parseFloat(code.m3) || 0), 0).toFixed(4)
+            }));
+        };
+    
+        const newCodes = formData.codes.filter((_, i) => i !== index);
+    
         if (codeToDelete.id) {
             axios.delete(`${config.apiUrl}/user/deleteUserCode/${editEntryId}/${codeToDelete.code}`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
-            .then(() => {
-                const newCodes = formData.codes.filter((_, i) => i !== index);
-                setFormData(prev => ({
-                    ...prev,
-                    codes: newCodes,
-                    totalWeight: newCodes.reduce((sum, code) => sum + (parseFloat(code.weight) || 0), 0).toFixed(2),
-                    totalM3: newCodes.reduce((sum, code) => sum + (parseFloat(code.m3) || 0), 0).toFixed(2)
-                }));
-            })
+            .then(() => updateCodes(newCodes))
             .catch(error => {
                 console.error('Error deleting code:', error);
                 alert('Error deleting the code. Please try again.');
                 if (error.response?.status === 403) navigate('/');
             });
         } else {
-            const newCodes = formData.codes.filter((_, i) => i !== index);
-            setFormData(prev => ({
-                ...prev,
-                codes: newCodes,
-                totalWeight: newCodes.reduce((sum, code) => sum + (parseFloat(code.weight) || 0), 0).toFixed(2),
-                totalM3: newCodes.reduce((sum, code) => sum + (parseFloat(code.m3) || 0), 0).toFixed(2)
-            }));
+            updateCodes(newCodes);
         }
     };
+    
     const deleteEntry = (entryId) => {
         if (window.confirm('Are you sure you want to delete this entry?')) {
             axios.delete(`${config.apiUrl}/user/deleteUserEntry/${entryId}`, {
@@ -218,22 +273,7 @@ const UserAddData = () => {
         }
     };
 
-    const saveEdit = () => {
-        axios.put(`${config.apiUrl}/user/updateUserEntry/${editEntryId}`, {
-            ...formData
-        }, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then(() => {
-            fetchEntries();
-            alert('Entry updated successfully!');
-            resetForm();
-        })
-        .catch(error => {
-            console.error('Error updating entry:', error);
-            if (error.response?.status === 403) navigate('/');
-        });
-    };
+   
     const formatPrice = (price) => {
         if (!price) return '0.00 Kip';
         const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -303,14 +343,14 @@ ${totalPart}
                           <td>{index + 1}</td>
                           <td>
                           <input
-        ref={(el) => (codeRefs.current[index] = el)}
-        type="text"
-        value={code.code}
-        onChange={(e) => handleCodeChange(index, 'code', e.target.value, e)}
-        onKeyDown={(e) => handleCodeChange(index, 'code', e.target.value, e)} // Listen to keydown events
-        className={styles.tableInput}
-        style={{ color: code.color }}
-    />
+                            ref={(el) => (codeRefs.current[index] = el)}
+                            type="text"
+                            value={code.code}
+                            onChange={(e) => handleCodeChange(index, 'code', e.target.value, e)}
+                            onKeyDown={(e) => handleCodeChange(index, 'code', e.target.value, e)} // Listen to keydown events
+                            className={styles.tableInput}
+                            style={{ color: code.color }}
+                            />
                           </td>
                           <td>
                               <input
@@ -372,7 +412,7 @@ ${totalPart}
           </div>
           {editMode ? (
               <div className={styles.buttonGroup}>
-                  <button onClick={saveEdit} className={styles.saveButton}>
+                  <button onClick={handlesaveEdit} className={styles.saveButton}>
                       <FontAwesomeIcon icon={faSave} /> Save Edit
                   </button>
                   <button onClick={resetForm} className={styles.cancelButton}>
@@ -380,7 +420,7 @@ ${totalPart}
                   </button>
               </div>
           ) : (
-              <button onClick={addUserEntry} className={styles.saveButton}>
+              <button onClick={handleSubmit} className={styles.saveButton}>
                   <FontAwesomeIcon icon={faSave} /> Save Data
               </button>
           )}
