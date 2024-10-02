@@ -381,7 +381,7 @@ const AddData = () => {
 ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
 ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
 ${currentDate} ໄດ້ຜ່ານ:
-https://akplogistics.com/
+https://akplogistics.com
 `;
       } else {
         message = `\`\`\`
