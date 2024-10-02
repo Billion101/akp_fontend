@@ -52,17 +52,28 @@ const UserAddData = () => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleCodeChange = (index, field, value, event) => {
+    const handleCodeChange = (index, field, value) => {
         const newCodes = [...formData.codes];
         newCodes[index][field] = value;
-        setFormData(prev => ({ ...prev, codes: newCodes }));
-    
-        // Check if 'Enter' key was pressed and create a new column
-        if (event.key === 'Enter' && field === 'code' && value !== '') {
-            addNewColumn();
-            setTimeout(() => codeRefs.current[index + 1]?.focus(), 0);
+        setFormData((prev) => ({ ...prev, codes: newCodes }));
+      };
+      
+      const handleKeyNavigation = (event, index, field, value) => {
+        // Handle arrow navigation
+        if (event.key === 'ArrowDown' && index < formData.codes.length - 1) {
+          event.preventDefault();
+          codeRefs.current[index + 1]?.focus();
+        } else if (event.key === 'ArrowUp' && index > 0) {
+          event.preventDefault();
+          codeRefs.current[index - 1]?.focus();
         }
-    };
+      
+        // Handle 'Enter' key to add a new row
+        if (event.key === 'Enter' && field === 'code' && value !== '') {
+          addNewColumn();
+          setTimeout(() => codeRefs.current[index + 1]?.focus(), 0);
+        }
+      };
     
    
 
@@ -347,7 +358,7 @@ ${totalPart}
                             type="text"
                             value={code.code}
                             onChange={(e) => handleCodeChange(index, 'code', e.target.value, e)}
-                            onKeyDown={(e) => handleCodeChange(index, 'code', e.target.value, e)} // Listen to keydown events
+                            onKeyDown={(e) => handleKeyNavigation(e, index, 'code', e.target.value)} // Listen to keydown events
                             className={styles.tableInput}
                             style={{ color: code.color }}
                             />
