@@ -22,7 +22,7 @@
   }
   
   .logo {
-    max-width: 200px;
+    max-width: 220px;
     height: auto;
   }
   
@@ -114,3 +114,17 @@
       font-size: 0.875rem;
     }
   }
+  .buttonRow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .checkCodeButton {
+    width: 48%; /* Adjust as needed */
+  }
+  
+  .submitButton {
+    width: 48%; /* Adjust as needed */
+  }
+  

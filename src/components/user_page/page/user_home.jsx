@@ -1,196 +1,76 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import styles from '../style/u_home.module.css';
-import config from '../../../config';
-import akp_icon from '../../../assets/akp-box.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons'; 
+import React, { useState, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import styles from "../style/u_home.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faBell } from "@fortawesome/free-solid-svg-icons";
+import UserHomeChainese from "./chainese_home";
+import UserHomeThai from "./thai_home";
 
 const UserHome = () => {
-    const navigate = useNavigate();
-    const [date, setDate] = useState('');
-    const [notes, setNotes] = useState([]);
-    const token = localStorage.getItem('token');
-    const [showModal, setShowModal] = useState(false);
-    const [selectedDayId, setSelectedDayId] = useState(null); 
-    const [clickedNote, setClickedNote] = useState(null);
-    const [totalPrices, setTotalPrices] = useState({});
-    const [loading, setLoading] = useState(true); // Initialize loading state
+  const navigate = useNavigate();
+  const [selectedForm, setSelectedForm] = useState("chainese");
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  }, [navigate]);
 
-    const handleClick = (id) => {
-        setClickedNote(id);
-    };
+  const renderFormSwitcher = () => (
+    <div className={styles.formSwitcher}>
+      <button
+        className={`${styles.switchButton} ${
+          selectedForm === "chainese" ? styles.active : ""
+        }`}
+        onClick={() => setSelectedForm("chainese")}
+      >
+        Chinese bill
+      </button>
+      <button
+        className={`${styles.switchButton} ${
+          selectedForm === "thai" ? styles.active : ""
+        }`}
+        onClick={() => setSelectedForm("thai")}
+      >
+        Thai bill
+      </button>
+    </div>
+  );
 
-    const handleLogout = useCallback(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        navigate('/');
-    }, [navigate]);
+  return (
+    <div className={styles.container}>
+      <aside className={styles.sidebar}>
+        <div className={styles.logoContainer}>
+          <div className={styles.logo}>
+            <FontAwesomeIcon icon={faUser} className={styles.logoIcon} />
+          </div>
+          <h2 className={styles.sidebarTitle}>User Page</h2>
+        </div>
 
-    useEffect(() => {
-        setLoading(true);
-        // Fetch existing notes when the component mounts
-        axios.get(`${config.apiUrl}/user/getUserDay`, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Use the correct token from localStorage
-            },
-        })
-            .then(response => {
-                setNotes(response.data);
-                response.data.forEach(note => fetchTotalPrice(note.id));
-            })
-            .catch(error => {
-                console.error('There was an error fetching the days!', error);
-                
-            })
-            .finally(() => {
-                setLoading(false); // Set loading to false when fetching is done
-            });
-    }, [token]);
+        <div className={styles.menu}>
+          <Link to="/usernoti" className={styles.notificationLink}>
+            ບິນຂອງຂ້ອຍ(ຈີນ)
+            <FontAwesomeIcon icon={faBell} className={styles.icon} />
+          </Link>
+          <Link to="/usernoti-thai" className={styles.notificationLink}>
+            ບິນຂອງຂ້ອຍ(ໄທ)
+            <FontAwesomeIcon icon={faBell} className={styles.icon} />
+          </Link>
+        </div>
 
-    const fetchTotalPrice = (dayId) => {
-        axios.get(`${config.apiUrl}/user/totalUserPrice/${dayId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-        .then(response => {
-            setTotalPrices(prevState => ({
-                ...prevState,
-                [dayId]: response.data.total_sum
-            }));
-        })
-        .catch(error => {
-            console.error(`There was an error fetching total price for day ${dayId}!`, error);
-        });
-    };
-
-    const formatPrice = (price) => {
-        if (!price) return '0.00 Kip';
-        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return `${formattedPrice} Kip`;
-    };
-
-    const addDay = () => {
-        if (!date) {
-            alert('Please select a date.');
-            return;
-        }
-
-        axios.post(`${config.apiUrl}/user/addUserDay`, { date }, {
-            headers: {
-                Authorization: `Bearer ${token}`, // Use the correct token from localStorage
-            },
-        })
-            .then(response => {
-                setNotes([...notes, { id: response.data.dayId, date }]);
-                setDate(''); // Clear the input
-            })
-            .catch(error => {
-                console.error('There was an error adding the day!', error);
-            });
-    };
-
-    const handleDelete = (dayId) => {
-        setSelectedDayId(dayId);
-        setShowModal(true);  // Show confirmation modal
-    };
-
-    const confirmDelete = () => {
-        if (selectedDayId) {
-            axios.delete(`${config.apiUrl}/user/deleteUserDay/${selectedDayId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(() => {
-                setNotes(notes.filter(note => note.id !== selectedDayId));
-                setShowModal(false);  // Close the modal after deletion
-                setSelectedDayId(null);  // Reset selected day ID
-            })
-            .catch(error => {
-                console.error('There was an error deleting the day!', error);
-            });
-        }
-    };
-
-    const cancelDelete = () => {
-        setSelectedDayId(null);
-        setShowModal(false);  // Close the modal without deleting
-    };
-
-    return (
-        <div className={styles.container}>
-            <nav className={styles.navbar}>
-                <div className={styles.logoName}>
-                <FontAwesomeIcon icon={faUser} className={styles.icon} />
-                <h2 className={styles.navbarTitle}>User Page</h2>
-                </div>
-               
-                <button onClick={handleLogout} className={`${styles.button} ${styles.logoutButton}`}>Log Out</button>
-            </nav>
-
-            <main className={styles.main}>
-                <div className={styles.addNoteSection}>
-                    <h2 className={styles.addNoteTitle}>Add New Day</h2>
-                    <div className={styles.addNoteForm}>
-                        <input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            className={styles.dateInput}
-                        />
-                        <button onClick={addDay} className={styles.addButton}>Add Day</button>
-                    </div>
-                </div>
-
-                <div className={styles.notesGrid}>
-    {notes.map((note) => (
-        <div
-            key={note.id}
-            className={`${styles.noteCard} ${clickedNote === note.id ? styles.clicked : ''}`}
-            onClick={() => handleClick(note.id)}
+        <button
+          onClick={handleLogout}
+          className={`${styles.button} ${styles.logoutButton}`}
         >
-            <div className={styles.noteContent}>
-                <div className={styles.dateBox}>
-                    {new Date(note.date).toLocaleDateString()}
-                </div>
-                <Link
-                 to={`/user-data/${note.id}`}
-                  className={styles.noteLink}
-                  state={{ date: note.date }}>
-                    <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
-                </Link>
-                <button
-                    onClick={() => handleDelete(note.id)}
-                    className={`${styles.button} ${styles.deleteButton}`}
-                >
-                    Delete
-                </button>
-                <div className={styles.totalPrice}>
-                                    Total Price: {loading ? 'Loading...' : formatPrice(totalPrices[note.id])}
-                                </div>
-            </div>
-        </div>
-    ))}
-</div>
-            </main>
-
-            {showModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h3>Are you sure you want to delete?</h3>
-                        <div className={styles.modalActions}>
-                            <button onClick={confirmDelete} className={`${styles.button} ${styles.confirmButton}`}>Yes</button>
-                            <button onClick={cancelDelete} className={`${styles.button} ${styles.cancelButton}`}>No</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+          Log Out
+        </button>
+      </aside>
+      <main className={styles.mainContent}>
+        {renderFormSwitcher()}
+        {selectedForm === "chainese" ? <UserHomeChainese /> : <UserHomeThai />}
+      </main>
+    </div>
+  );
 };
 
 export default UserHome;

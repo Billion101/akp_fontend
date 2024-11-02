@@ -1,0 +1,438 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color:#FFAA1A;
+    padding: 15px 25px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.backButton:hover {
+  color: black;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #7f8c8d;
+}
+
+.searchInput {
+  padding: 8px 8px 8px 35px;
+  border: none;
+  border-radius: 20px;
+  background-color: white;
+    color: black;
+  width: 300px;
+}
+.searchInput::placeholder {
+  color: #bdc3c7;
+}
+.selectRole {
+  width: 150px; 
+  padding: 10px; 
+  border-radius: 5px; 
+  background-color: #fff; 
+  color: #333; 
+  font-size: 16px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  cursor: pointer;
+  text-align: center;
+}
+
+.selectRole:hover {
+  border-color: #e69700;
+}
+
+.selectRole:focus {
+  outline: none;
+  border-color: #FFAA1A; 
+  box-shadow: 0 0 5px rgba(255, 170, 26, 0.6); 
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+  }
+  
+  
+  .inputUP {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 30%;
+  }
+  
+ 
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+   
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center; /* Center the content inside cells */
+    vertical-align: middle; /* Vertically center the content */
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 90%; /* Set input width to 90% */
+    box-sizing: border-box; /* Ensures padding is included in width calculation */
+    margin: 0 auto; /* Center the input inside the table cell */
+  }
+   .totalPrice{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  .totalItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .totalItem label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  
+  .savebutton {
+    padding: 9px 15px;
+    background-color: #25D366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    width: 15%;
+    margin-right: 10px;
+  }
+  
+  .button .addButton :hover {
+    background-color: #128C7E;
+  }
+  .addButton{
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 15%;
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .cancelButton {
+    width: 15%; 
+    background-color: #ef4444;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 0;
+    }
+    
+    .cancelButton:hover {
+      background-color: #dc2626;
+    }
+    
+  .entryContainer {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+  }
+  
+  .entryHeader {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .entryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  .entryTable th, .entryTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .entryTable th {
+    background-color: #e9ecef;
+  }
+  
+  .totalInfo {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  .actionButton {
+    padding: 8px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    background-color: #25D366; 
+    color: white;
+  }
+  
+  
+  .deleteButton {
+    padding: 8px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    background-color: #e11313;
+  }
+  .deleteButton:hover {
+    background-color: #f44910;
+  }
+  
+  .editButton {
+    background-color: #e11313;
+  }
+  
+  .editButton:hover {
+    background-color: #f44910;
+  }
+  
+  .whatsappButton:hover {
+    background-color: #128C7E; /* Darker WhatsApp green on hover */
+  }
+  
+  .icon {
+    margin-right: 5px;
+    font-size: 15px;
+  }
+  
+  .whatsappButton:focus {
+    outline: none;
+  }
+  
+  
+  
+  
+  /* Popup Container */
+  .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f9f9f9;
+  padding: 30px;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  }
+  
+  /* Popup container */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Popup title */
+  .popupTitle {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .roleButton {
+    background-color: #30b752; /* Green color */
+    color: #fff;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+  }
+  
+  /* Cancel button */
+  .cancelsButton {
+    background-color: #e11313; 
+    color: #fff;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 60%;
+    transition: background-color 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+  }
+  
+  /* Hover effects for buttons */
+  .roleButton:hover {
+    opacity: 0.9;
+    background-color: #FFAA1A;
+  }
+  
+  .cancelsButton:hover {
+    opacity: 0.9;
+    background-color: #c10c0c; /* Slightly different red for cancel button */
+  }
+  /* User selection popup container */
+  .userSelection {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Popup title */
+  .popupTitle {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* User select dropdown */
+  .userSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    appearance: none;
+    background-color: #f9f9f9;
+  }
+  
+  /* Button styling */
+  .sendButton, .cancelButton {
+    width: 100px;
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sendButton {
+    background-color: #FFAA1A;
+    color: white;
+  }
+  
+  .sendButton:hover {
+    background-color: #e69917;
+  }
+  
+  .cancelButton {
+    background-color: #ccc;
+    color: #333;
+  }
+  
+  .cancelButton:hover {
+    background-color: #b3b3b3;
+  }
+  .actionbtn {
+    display: flex;
+    justify-content: space-between; /* This will push leftButtons to the left and rightButtons to the right */
+    align-items: center;
+    width: 100%; /* Optional: adjust if needed */
+  }
+  
+  .leftButtons {
+    display: flex;
+    gap: 10px; /* Adjust spacing between Edit and WhatsApp buttons */
+  }
+  
+  .rightButtons {
+    display: flex;
+  }
+  @media (max-width: 500px) {
+    .userSelection {
+        width: 90%;
+    }
+  
+    .sendButton, .cancelButton {
+        width: 100px;
+    }
+  }
+  

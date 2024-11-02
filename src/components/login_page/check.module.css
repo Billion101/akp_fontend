@@ -1,0 +1,125 @@
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+  
+  .title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+  
+  .inputGroup {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+  
+  .input:focus {
+    border-color: #FF6600;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+  
+  .input::placeholder {
+    color: #a0aec0;
+  }
+  
+  .trackButton {
+    padding: 12px 24px;
+    background: #FF6600;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .trackButton:hover {
+    background: #FF6600;
+    transform: translateY(-1px);
+  }
+  
+  .trackButton:active {
+    transform: translateY(1px);
+  }
+  
+  .errorMessage {
+    color: #e74c3c;
+    background: #fdeaea;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .trackingInfo {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e2e8f0;
+    animation: fadeIn 0.5s ease;
+  }
+  
+  .trackingInfo h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .trackingInfo p {
+    margin: 10px 0;
+    color: #4a5568;
+    line-height: 1.6;
+  }
+  
+  .trackingInfo strong {
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      margin: 20px;
+      padding: 20px;
+    }
+  
+    .inputGroup {
+      flex-direction: column;
+    }
+  
+    .trackButton {
+      width: 100%;
+    }
+  }

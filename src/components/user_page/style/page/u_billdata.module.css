@@ -1,61 +1,83 @@
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color:#FFAA1A;
-    padding: 15px 25px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .backButton {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    transition: color 0.3s ease;
-  }
-  .backButton:hover{
-   color: black;
-  }
-  
-  
-  .searchContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    left: 10px;
-    color: #7f8c8d;
-  }
-  
-  .searchInput {
-    padding: 8px 8px 8px 35px;
-    border: none;
-    border-radius: 20px;
-    background-color: white;
-    color: black;
-    width: 300px;
-  }
-  
-  .searchInput::placeholder {
-    color: #bdc3c7;
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
 
-  
-  .editSection, .entriesSection {
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color:#FFAA1A;
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+.backButton:hover{
+ color: black;
+}
+
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: #7f8c8d;
+}
+
+.searchInput {
+  padding: 8px 8px 8px 35px;
+  border: none;
+  border-radius: 20px;
+  background-color: white;
+  color: black;
+  width: 300px;
+}
+
+.searchInput::placeholder {
+  color: #bdc3c7;
+}
+
+.formSwitcher {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.switchButton {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.switchButton:hover {
+  background-color: #e0e0e0;
+}
+
+.switchButton.active {
+  background-color: #ff9900;
+  color: white;
+}
+
+.editSection, .entriesSection {
     margin-top: 15px;
     flex: 1;
     background-color: #ffffff;
@@ -188,7 +210,7 @@
     background-color: #f9f9f9;
     border-radius: 8px;
     padding: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   

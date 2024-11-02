@@ -46,11 +46,17 @@ const ManageUsers = () => {
     const handleDeleteUser = async (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
-                await axios.delete(`${config.apiUrl}/admin/deleteUser/${id}`, {
+                const response = await axios.delete(`${config.apiUrl}/admin/deleteUser/${id}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
-                fetchUsers();
+                if (response.data.message) {
+                    // Show success message to user
+                    alert('User deleted successfully');
+                    fetchUsers(); // Refresh the users list
+                }
             } catch (error) {
+                // Show error message to user
+                alert('Error deleting user: ' + (error.response?.data?.details || error.message));
                 console.error('Error deleting user:', error);
             }
         }
@@ -126,7 +132,7 @@ const ManageUsers = () => {
                         className={styles.editInput}
                     />
                     <input 
-                        type="password" 
+                        type="text" 
                         placeholder="New Password (optional)"
                         value={editingUser.newPassword} 
                         onChange={(e) => setEditingUser({...editingUser, newPassword: e.target.value})}

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { useParams, Link, useNavigate,useLocation } from 'react-router-dom';
+import { useParams,useNavigate,Link,useLocation} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { faArrowLeft, faSearch, faEdit, faSave, faTimes, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import styles from '../style/u_data.module.css';
-import config from '../../../config';
+import {faEdit, faSave, faTimes, faPlus, faTrash,faArrowLeft, faSearch  } from '@fortawesome/free-solid-svg-icons';
+import styles from '../../style/page/u_billdata.module.css';
+import config from '../../../../config';
 
-const UserAddData = () => {
+const UserChainesedata =  ()=> {
     const { id: dayId } = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -20,23 +20,38 @@ const UserAddData = () => {
     });
     const [entries, setEntries] = useState([]);
     const [filteredEntries, setFilteredEntries] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [editEntryId, setEditEntryId] = useState(null);
     const token = localStorage.getItem('token');
     const codeRefs = useRef([]);
     const editBoxRef = useRef(null);
     const location = useLocation();
-    const selectedDate = location.state?.date ? new Date(location.state.date).toLocaleDateString() : 'N/A';
-
-
+    const selectedDate = location.state?.date
+      ? new Date(location.state.date).toLocaleDateString()
+      : "N/A";
+      const [searchTerm, setSearchTerm] = useState("");
+    
+      const handleSearch = (e) => {
+        const value = e.target.value.toLowerCase();
+        setSearchTerm(value);
+    
+        const filtered = entries.filter(
+          (entry) =>
+            entry.userName.toLowerCase().includes(value) ||
+            entry.phoneNumber.toLowerCase().includes(value) ||
+            entry.codes.some((code) => code.code.toLowerCase().includes(value))
+        );
+    
+        setFilteredEntries(filtered);
+      };
     const fetchEntries = useCallback(() => {
         axios.get(`${config.apiUrl}/user/getUserEntries/${dayId}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
         .then(response => {
-            setEntries(response.data);
-            setFilteredEntries(response.data);
+            const reversedEntries = [...response.data].reverse();
+            setEntries(reversedEntries);
+            setFilteredEntries(reversedEntries); 
         })
         .catch(error => {
             console.error('Error fetching user entries:', error);
@@ -207,16 +222,6 @@ const UserAddData = () => {
         setEditEntryId(null);
     };
 
-    const handleSearch = (e) => {
-        const value = e.target.value.toLowerCase();
-        setSearchTerm(value);
-        setFilteredEntries(entries.filter(entry =>
-            entry.userName.toLowerCase().includes(value) ||
-            entry.phoneNumber.toLowerCase().includes(value) ||
-            entry.codes.some(code => code.code.toLowerCase().includes(value))
-        ));
-    };
-
     const handleEditClick = (entry) => {
         setEditMode(true);
         setEditEntryId(entry.id);
@@ -228,7 +233,11 @@ const UserAddData = () => {
             totalWeight: entry.totalWeight,
             totalM3: entry.totalM3,
         });
-        setTimeout(() => editBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        setTimeout(() => {
+            if (editBoxRef.current) {
+              editBoxRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }, 200);
     };
 
     const addNewColumn = () => {
@@ -319,11 +328,28 @@ ${totalPart}
 
         window.open(`https://wa.me/+85620${entry.phoneNumber}?text=${encodeURIComponent(message)}`);
     };
-
+    const renderNav = () => (
+        <nav className={styles.navbar}>
+          <Link to="/home-user" className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Back to Homepage
+          </Link>
+          <div className={styles.dateDisplay}>Date: {selectedDate}</div>
+          <div className={styles.searchContainer}>
+            <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearch}
+              className={styles.searchInput}
+            />
+          </div>
+        </nav>
+      );
     // Render functions
     const renderForm = () => (
-      <div className={styles.addForm}>
-          <h3 >{editMode ? 'Edit Entry' : 'Add New Entry'}</h3>
+      <div className={styles.addForm} ref={editBoxRef}>
+          <h3 >{editMode ? 'Edit Chainese Entry' : 'Add New Chainese Entry'}</h3>
           <input
               type="text"
               value={formData.userName}
@@ -441,7 +467,7 @@ ${totalPart}
   const renderEntries = () => (
       <div className={styles.entriesSection}>
           {filteredEntries.map(entry => (
-              <div key={entry.id} className={styles.entryCard}>
+              <div key={entry.id || index}  className={styles.entryCard}>
                   <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
                   <p>Phone: {entry.phoneNumber}</p>
                   <table className={styles.table}>
@@ -496,33 +522,14 @@ ${totalPart}
           ))}
       </div>
   );
-
+  
   return (
-      <div className={styles.container}>
-          <nav className={styles.navbar}>
-              <Link to="/home-user" className={styles.backButton}>
-                  <FontAwesomeIcon icon={faArrowLeft} /> Back to Homepage
-              </Link>
-              <div className={styles.dateDisplay}>
-                 Date: {selectedDate}
-                </div>
-              <div className={styles.searchContainer}>
-                  <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
-                  <input
-                      type="text"
-                      placeholder="Search"
-                      value={searchTerm}
-                      onChange={handleSearch}
-                      className={styles.searchInput}
-                  />
-              </div>
-          </nav>
-          <div className={styles.content} ref={editBoxRef}>
-              {renderForm()}
-              {renderEntries()}
-          </div>
-      </div>
+    <div className={styles.container}>
+      {renderNav()}
+        {renderForm()}
+        {renderEntries()}
+  </div>
   );
 };
 
-export default UserAddData;
+export default UserChainesedata;
