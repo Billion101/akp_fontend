@@ -84,6 +84,42 @@
       font-weight: bold;
       color: #34495e;
     }
+  
+    .searchContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+  
+    .searchIcon {
+      position: absolute;
+      left: 10px;
+      color: #7f8c8d;
+    }
     
-
+    .searchInput {
+      padding: 8px 8px 8px 35px;
+      border: none;
+      border-radius: 20px;
+      background-color: white;
+      color: black;
+      width: 300px;
+    }
+    
+    .searchInput::placeholder {
+      color: #bdc3c7;
+    }
+  
+  .highlightedText {
+      background-color: rgb(254, 249, 195);
+      border: 2px solid rgb(250, 204, 21);
+      border-radius: 0.25rem;
+      padding: 0 0.25rem;
+  }
+  
+  /* Optional: Add hover effect */
+  .highlightedText:hover {
+      background-color: rgb(254, 240, 138);
+      transition: background-color 0.2s ease;
+  }
     

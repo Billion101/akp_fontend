@@ -42,21 +42,45 @@ const AddChaineseData = () => {
     ? new Date(location.state.date).toLocaleDateString()
     : "N/A";
     const [searchTerm, setSearchTerm] = useState("");
-
-  
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-
-    const filtered = entries.filter(
-      (entry) =>
-        entry.userName.toLowerCase().includes(value) ||
-        entry.phoneNumber.toLowerCase().includes(value) ||
-        entry.codes.some((code) => code.code.toLowerCase().includes(value))
-    );
-
-    setFilteredEntries(filtered);
-  };
+    const searchTimeout = useRef();
+    const highlightText = (text, searchTerm) => {
+      if (!searchTerm) return text;
+      
+      const parts = text.toString().split(new RegExp(`(${searchTerm})`, 'gi'));
+      
+      return parts.map((part, index) => 
+        part.toLowerCase() === searchTerm.toLowerCase() ? (
+          <span key={index} className={styles.highlightedText}>
+            {part}
+          </span>
+        ) : part
+      );
+    };
+    const handleSearch = (e) => {
+      const value = e.target.value.toLowerCase();
+      setSearchTerm(value);
+    
+      // Use debounce to improve performance
+      clearTimeout(searchTimeout.current);
+      searchTimeout.current = setTimeout(() => {
+        const filtered = entries.filter(
+          (entry) =>
+            entry.userName.toLowerCase().includes(value) ||
+            entry.phoneNumber.toLowerCase().includes(value) ||
+            entry.codes.some((code) => code.code.toLowerCase().includes(value))
+        );
+    
+        setFilteredEntries(filtered);
+      }, 300);
+    };
+    useEffect(() => {
+      return () => {
+        if (searchTimeout.current) {
+          clearTimeout(searchTimeout.current);
+        }
+      };
+    }, []);
+    
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -381,6 +405,13 @@ const AddChaineseData = () => {
           .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         return `${formattedPrice} Kip`;
       };
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    };
     
       const sendWhatsAppMessage = (entry) => {
         const popup = document.createElement("div");
@@ -691,9 +722,11 @@ ${totalPart}
       );
       const renderEntries = () => (
         filteredEntries.map((entry, index) => (
-            <div key={entry.id || index} className={styles.entryContainer}>
-            <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
-            <p>Phone: {entry.phoneNumber}</p>
+          <div key={entry.id || index} className={styles.entryContainer}>
+            <h4 className={styles.entryHeader}>
+              Name: {highlightText(entry.userName, searchTerm)}
+            </h4>
+            <p>Phone: {highlightText(entry.phoneNumber, searchTerm)}</p>
             <table className={styles.entryTable}>
               <thead>
                 <tr>
@@ -707,7 +740,9 @@ ${totalPart}
                 {sortCodes(entry.codes).map((code, index) => (
                   <tr key={index}>
                     <td style={{ color: code.color || "black" }}>{index + 1}</td>
-                    <td style={{ color: code.color || "black" }}>{code.code}</td>
+                    <td style={{ color: code.color || "black" }}>
+                      {highlightText(code.code, searchTerm)}
+                    </td>
                     <td style={{ color: code.color || "black" }}>
                       {code.weight ? `${code.weight} kg` : ""}
                     </td>

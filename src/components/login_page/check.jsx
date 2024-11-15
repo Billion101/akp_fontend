@@ -4,21 +4,24 @@ import styles from './check.module.css';
 
 const CheckCode = () => {
   const [productCode, setProductCode] = useState('');
-  const [trackingData, setTrackingData] = useState(null);
+  const [trackingData, setTrackingData] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleCheckTracking = async () => {
     try {
       const response = await axios.get(`https://logistics.gaobat.com/api/tracking/${productCode}`);
-      setTrackingData(response.data); // assuming response.data contains tracking info
-      setErrorMessage('');
-    } catch (error) {
-      if (error.response) {
-        setErrorMessage('Unable to retrieve tracking data. Please check the product code and try again.');
+      const trackingInfo = response.data;
+
+      if (trackingInfo && trackingInfo.events && trackingInfo.events.length > 0) {
+        setTrackingData(trackingInfo.events);
+        setErrorMessage('');
       } else {
-        setErrorMessage('Network error. Please try again later.');
+        setTrackingData([]);
+        setErrorMessage('No tracking information found for this product code.');
       }
-      setTrackingData(null);
+    } catch (error) {
+      setTrackingData([]);
+      setErrorMessage('An error occurred while fetching tracking data.');
     }
   };
 
@@ -38,13 +41,16 @@ const CheckCode = () => {
         </button>
       </div>
       {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-      {trackingData && (
-        <div className={styles.trackingInfo}>
-          <h3>Tracking Information</h3>
-          <p><strong>Status:</strong> {trackingData.status}</p>
-          <p><strong>Location:</strong> {trackingData.location}</p>
-          <p><strong>Last Updated:</strong> {trackingData.lastUpdated}</p>
-          {/* Adjust fields based on actual response structure */}
+      {trackingData.length > 0 && (
+        <div className={styles.timeline}>
+          {trackingData.map((event, index) => (
+            <div key={index} className={styles.timelineItem}>
+              <div className={styles.timelineTime}>{event.date}</div>
+              <div className={styles.timelineContent}>
+                <div className={styles.timelineStatus}>{event.status}</div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

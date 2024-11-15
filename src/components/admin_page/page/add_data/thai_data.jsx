@@ -41,7 +41,44 @@ const AddThaiData = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState([]);
     const [selectedRole, setSelectedRole] = useState("client");
-  
+    const searchTimeout = useRef();
+    const highlightText = (text, searchTerm) => {
+      if (!searchTerm) return text;
+      
+      const parts = text.toString().split(new RegExp(`(${searchTerm})`, 'gi'));
+      
+      return parts.map((part, index) => 
+        part.toLowerCase() === searchTerm.toLowerCase() ? (
+          <span key={index} className={styles.highlightedText}>
+            {part}
+          </span>
+        ) : part
+      );
+    };
+    const handleSearch = (e) => {
+      const value = e.target.value.toLowerCase();
+      setSearchTerm(value);
+    
+      // Use debounce to improve performance
+      clearTimeout(searchTimeout.current);
+      searchTimeout.current = setTimeout(() => {
+        const filtered = entries.filter(
+          (entry) =>
+            entry.userName.toLowerCase().includes(value) ||
+            entry.phoneNumber.toLowerCase().includes(value) ||
+            entry.codes.some((code) => code.code.toLowerCase().includes(value))
+        );
+    
+        setFilteredEntries(filtered);
+      }, 300);
+    };
+    useEffect(() => {
+      return () => {
+        if (searchTimeout.current) {
+          clearTimeout(searchTimeout.current);
+        }
+      };
+    }, []);
     useEffect(() => {
       fetchUsers();
     }, []);
@@ -136,19 +173,7 @@ const AddThaiData = () => {
     fetchEntries();
   }, [fetchEntries]);
 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-
-    const filtered = entries.filter(
-      (entry) =>
-        entry.userName.toLowerCase().includes(value) ||
-        entry.phoneNumber.toLowerCase().includes(value) ||
-        entry.codes.some((code) => code.code.toLowerCase().includes(value))
-    );
-
-    setFilteredEntries(filtered);
-  };
+ 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -400,7 +425,7 @@ https://akplogistics.com
 ມື້ນີ້ມີພັດສະດຸທ່ານເຂົ້າ ${totalItems} ລາຍການ
 ສາມາດກວດສອບລະຫັດເເລະຄ່າຂົນສົ່ງຂອງວັນທີ
 ${currentDate} ໄດ້ດັ່ງຕໍ່ໄປນີ້:
-ເຄື່ອງຈີນ:
+ເຄື່ອງໄທ:
 ${formattedCodes}
 
 Total Price (Lao): ${formatPrice(entry.totalPrice)} Kip
@@ -576,8 +601,12 @@ Total Price (Thai): ${formatPrice(entry.totalPrices)} Baht
   const renderEntries = () => (
     filteredEntries.map((entry, index) => (
       <div key={entry.id || index} className={styles.entryContainer}>
-        <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
-        <p>Phone: {entry.phoneNumber}</p>
+        <h4 className={styles.entryHeader}>
+        Name: {highlightText(entry.userName, searchTerm)}
+          </h4>
+        <p>
+        <p>Phone: {highlightText(entry.phoneNumber, searchTerm)}</p>
+          </p>
         <table className={styles.entryTable}>
           <thead>
             <tr>
@@ -590,7 +619,7 @@ Total Price (Thai): ${formatPrice(entry.totalPrices)} Baht
             {entry.codes.map((code, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{code.code}</td>
+                <td> {highlightText(code.code, searchTerm)}</td>
                 <td>{code.price ? `${code.price} ฿` : ""}</td>
               </tr>
             ))}

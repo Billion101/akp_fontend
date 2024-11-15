@@ -30,19 +30,45 @@ const UserThaiData = () => {
       : "N/A";
       const [searchTerm, setSearchTerm] = useState("");
     
+      const searchTimeout = useRef();
+      const highlightText = (text, searchTerm) => {
+        if (!searchTerm) return text;
+        
+        const parts = text.toString().split(new RegExp(`(${searchTerm})`, 'gi'));
+        
+        return parts.map((part, index) => 
+          part.toLowerCase() === searchTerm.toLowerCase() ? (
+            <span key={index} className={styles.highlightedText}>
+              {part}
+            </span>
+          ) : part
+        );
+      };
       const handleSearch = (e) => {
         const value = e.target.value.toLowerCase();
         setSearchTerm(value);
-    
-        const filtered = entries.filter(
-          (entry) =>
-            entry.userName.toLowerCase().includes(value) ||
-            entry.phoneNumber.toLowerCase().includes(value) ||
-            entry.codes.some((code) => code.code.toLowerCase().includes(value))
-        );
-    
-        setFilteredEntries(filtered);
+      
+        // Use debounce to improve performance
+        clearTimeout(searchTimeout.current);
+        searchTimeout.current = setTimeout(() => {
+          const filtered = entries.filter(
+            (entry) =>
+              entry.userName.toLowerCase().includes(value) ||
+              entry.phoneNumber.toLowerCase().includes(value) ||
+              entry.codes.some((code) => code.code.toLowerCase().includes(value))
+          );
+      
+          setFilteredEntries(filtered);
+        }, 300);
       };
+      useEffect(() => {
+        return () => {
+          if (searchTimeout.current) {
+            clearTimeout(searchTimeout.current);
+          }
+        };
+      }, []);
+
     useEffect(() => {
         const totalThai = formData.codes.reduce((sum, { price }) => {
             return sum + (parseFloat(price) || 0);
@@ -435,8 +461,10 @@ const renderEntries = () => (
     <div className={styles.entriesSection}>
         {filteredEntries.map(entry => (
             <div key={entry.id} className={styles.entryCard}>
-                <h4 className={styles.entryHeader}>Name: {entry.userName}</h4>
-                <p>Phone: {entry.phoneNumber}</p>
+                <h4 className={styles.entryHeader}>
+                    Name: {highlightText(entry.userName, searchTerm)}
+                    </h4>
+                    <p>Phone: {highlightText(entry.phoneNumber, searchTerm)}</p>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -453,7 +481,7 @@ const renderEntries = () => (
                         }).map((code, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{code.code}</td>
+                                <td> {highlightText(code.code, searchTerm)}</td>
                                 <td>
                                     {code.price ? `${code.price} ฿` : ''}
                                 </td>

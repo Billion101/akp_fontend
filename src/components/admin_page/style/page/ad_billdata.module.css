@@ -435,4 +435,10 @@
         width: 100px;
     }
   }
+  .highlightedText{
+    background-color: #fef9c3;
+    border: 2px solid #facc15;
+    border-radius: 0.25rem;
+    padding: 0 0.25rem;
+  }
   

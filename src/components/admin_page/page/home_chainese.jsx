@@ -9,14 +9,15 @@ const HomeChainese = () => {
   const [date, setDate] = useState("");
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedDayId, setSelectedDayId] = useState(null);
   const [clickedNote, setClickedNote] = useState(null);
   const [totalPrice, setTotalPrice] = useState({});
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
-  const [editingTitleId, setEditingTitleId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDate, setEditDate] = useState("");
+
   const handleClick = (id) => {
     setClickedNote(id);
   };
@@ -98,21 +99,23 @@ const HomeChainese = () => {
   };
 
   const startEditing = (note) => {
-    setEditingTitleId(note.id);
+    setSelectedDayId(note.id);
     setEditTitle(note.title || "");
     setEditDate(new Date(note.date).toISOString().split('T')[0]);
+    setShowEditModal(true);
   };
 
   const cancelEditing = () => {
-    setEditingTitleId(null);
+    setShowEditModal(false);
+    setSelectedDayId(null);
     setEditTitle("");
     setEditDate("");
   };
 
-  const saveTitle = async (noteId) => {
+  const saveTitle = async () => {
     try {
       await axios.put(
-        `${config.apiUrl}/admin/editAdminDay/${noteId}`,
+        `${config.apiUrl}/admin/editAdminDay/${selectedDayId}`,
         { 
           title: editTitle,
           date: editDate 
@@ -126,13 +129,14 @@ const HomeChainese = () => {
 
       setNotes(
         notes.map((note) =>
-          note.id === noteId 
+          note.id === selectedDayId 
             ? { ...note, title: editTitle, date: editDate } 
             : note
         )
       );
 
-      setEditingTitleId(null);
+      setShowEditModal(false);
+      setSelectedDayId(null);
       setEditTitle("");
       setEditDate("");
     } catch (error) {
@@ -140,7 +144,6 @@ const HomeChainese = () => {
       alert("Failed to update day");
     }
   };
-
 
   const handleDelete = (dayId) => {
     setSelectedDayId(dayId);
@@ -170,6 +173,13 @@ const HomeChainese = () => {
     setSelectedDayId(null);
     setShowModal(false);
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+};
 
   return (
     <div className={styles.container}>
@@ -200,78 +210,25 @@ const HomeChainese = () => {
         </div>
 
         <div className={styles.notesGrid}>
-        {notes.map((note) => (
-          <div
-            key={note.id}
-            className={`${styles.noteCard} ${
-              clickedNote === note.id ? styles.clicked : ""
-            }`}
-            onClick={() => handleClick(note.id)}
-          >
-            <div className={styles.noteContent}>
-              <div className={styles.dateBox}>
-                {editingTitleId === note.id ? (
-                  <input
-                    type="date"
-                    value={editDate}
-                    onChange={(e) => setEditDate(e.target.value)}
-                    className={styles.editDateInput}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                ) : (
-                  new Date(note.date).toLocaleDateString()
-                )}
-              </div>
-
-              {editingTitleId === note.id ? (
-                <div className={styles.editTitleBox}>
-                  <input
-                    type="text"
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.target.value)}
-                    className={styles.editTitleInput}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <div className={styles.editButtons}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        saveTitle(note.id);
-                      }}
-                      className={`${styles.button} ${styles.saveButton}`}
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        cancelEditing();
-                      }}
-                      className={`${styles.button} ${styles.cancelsButton}`}
-                    >
-                      Cancel
-                    </button>
-                  </div>
+          {notes.map((note) => (
+            <div
+              key={note.id}
+              className={`${styles.noteCard} ${
+                clickedNote === note.id ? styles.clicked : ""
+              }`}
+              onClick={() => handleClick(note.id)}
+            >
+              <div className={styles.noteContent}>
+                <div className={styles.dateBox}>
+                 {formatDate(note.date)}
                 </div>
-              ) : (
-                <>
-                  {note.title && (
-                    <div className={styles.titleBox}>
+
+                {note.title && (
+                  <div className={styles.titleBox}>
                     <span className={styles.titlePrefix}>ລົດຄັນທີ: </span>
                     {note.title}
                   </div>
-                  )}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      startEditing(note);
-                    }}
-                    className={`${styles.button} ${styles.editButton}`}
-                  >
-                    Edit
-                  </button>
-                </>
-              )}
+                )}
 
                 <Link
                   to={`/add-chainesedata/${note.id}`}
@@ -284,6 +241,16 @@ const HomeChainese = () => {
                     className={styles.noteImage}
                   />
                 </Link>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startEditing(note);
+                  }}
+                  className={`${styles.button} ${styles.editButton}`}
+                >
+                  Edit
+                </button>
 
                 <button
                   onClick={() => handleDelete(note.id)}
@@ -306,6 +273,7 @@ const HomeChainese = () => {
         </div>
       </main>
 
+      {/* Delete Confirmation Modal */}
       {showModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
@@ -323,6 +291,44 @@ const HomeChainese = () => {
               >
                 No
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {showEditModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Edit Day</h3>
+            <div className={styles.editForm}>
+              <input
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                className={styles.editDateInput}
+              />
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Enter title"
+                className={styles.editTitleInput}
+              />
+              <div className={styles.modalActions}>
+                <button
+                  onClick={saveTitle}
+                  className={`${styles.button} ${styles.confirmButton}`}
+                >
+                  Save
+                </button>
+                <button
+                  onClick={cancelEditing}
+                  className={`${styles.button} ${styles.cancelButton}`}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>

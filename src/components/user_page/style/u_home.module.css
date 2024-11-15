@@ -260,31 +260,41 @@
 
 
 
-  .modalOverlay {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .modalContent {
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  border-radius: 10px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transform: translateY(0);
+  transition: transform 0.3s ease-out;
 }
-
 .modalActions {
-  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
 }
-
+.modalContent h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.5rem;
+  text-align: center;
+}
 .confirmButton {
   background-color: #28a745;
   color: white;
@@ -296,3 +306,101 @@
   color: white;
 }
 
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.editDateInput,
+.editTitleInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.editDateInput:focus,
+.editTitleInput:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+
+.editButton {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: #e50707;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+}
+
+.editButton:hover {
+  background-color: #e50707;
+  transform: scale(1.4);
+}
+
+.editTitleBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 3;
+  width: 80%;
+}
+
+.editTitleInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 2px solid #4CAF50;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.editButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.saveButton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.cancelsButton {
+  background-color: #f44336;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.saveButton:hover,
+.cancelsButton:hover {
+  opacity: 0.9;
+  transform: scale(1.1);
+}

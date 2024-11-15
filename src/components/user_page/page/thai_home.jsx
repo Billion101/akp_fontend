@@ -10,40 +10,38 @@ const UserHomeThai = () => {
     const [notes, setNotes] = useState([]);
     const token = localStorage.getItem('token');
     const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [selectedDayId, setSelectedDayId] = useState(null); 
     const [clickedNote, setClickedNote] = useState(null);
     const [totalPrice, setTotalPrice] = useState({});
     const [totalThaiPrice, setTotalThaiPrice] = useState({});
-    const [loading, setLoading] = useState(true); // Initialize loading state
+    const [loading, setLoading] = useState(true);
+    const [editDate, setEditDate] = useState('');
 
     const handleClick = (id) => {
         setClickedNote(id);
     };
 
-
     useEffect(() => {
         setLoading(true);
-        // Fetch existing notes when the component mounts
         axios.get(`${config.apiUrl}/user/getUserThaiDay`, {
             headers: {
-                Authorization: `Bearer ${token}`, // Use the correct token from localStorage
+                Authorization: `Bearer ${token}`,
             },
         })
             .then(response => {
-                // Sort the notes by date in descending order
                 const sortedNotes = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
                 setNotes(sortedNotes);
                 sortedNotes.forEach(note => {
                     fetchTotalPrice(note.id);
-                    fetchTotalThaiPrice(note.id); // Fetch Thai price for each note
+                    fetchTotalThaiPrice(note.id);
                 });
             })
             .catch(error => {
                 console.error('There was an error fetching the days!', error);
-                
             })
             .finally(() => {
-                setLoading(false); // Set loading to false when fetching is done
+                setLoading(false);
             });
     }, [token]);
 
@@ -63,6 +61,7 @@ const UserHomeThai = () => {
             console.error(`There was an error fetching total price for day ${dayId}!`, error);
         });
     };
+
     const fetchTotalThaiPrice = (dayId) => {
         axios.get(`${config.apiUrl}/user/totalUserThaiPrice/${dayId}`, {
             headers: {
@@ -94,25 +93,65 @@ const UserHomeThai = () => {
 
         axios.post(`${config.apiUrl}/user/addUserThaiDay`, { date }, {
             headers: {
-                Authorization: `Bearer ${token}`, // Use the correct token from localStorage
+                Authorization: `Bearer ${token}`,
             },
         })
             .then(response => {
-                // Prepend the new day to the beginning of the notes array
                 setNotes([{ id: response.data.dayId, date }, ...notes]);
-                // Fetch the total price for the newly added day
                 fetchTotalPrice(response.data.dayId);
                 fetchTotalThaiPrice(response.data.dayId);
-                setDate(''); // Clear the input
+                setDate('');
             })
             .catch(error => {
                 console.error('There was an error adding the day!', error);
             });
     };
 
+    // New edit-related functions
+    const startEditing = (note) => {
+        setSelectedDayId(note.id);
+        setEditDate(new Date(note.date).toISOString().split('T')[0]);
+        setShowEditModal(true);
+    };
+
+    const cancelEditing = () => {
+        setShowEditModal(false);
+        setSelectedDayId(null);
+        setEditDate('');
+    };
+
+    const saveDate = async () => {
+        try {
+            await axios.put(
+                `${config.apiUrl}/user/editUserThaiDay/${selectedDayId}`,
+                { date: editDate },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }
+            );
+
+            setNotes(
+                notes.map((note) =>
+                    note.id === selectedDayId 
+                        ? { ...note, date: editDate }
+                        : note
+                )
+            );
+
+            setShowEditModal(false);
+            setSelectedDayId(null);
+            setEditDate('');
+        } catch (error) {
+            console.error('Error updating day:', error);
+            alert('Failed to update day');
+        }
+    };
+
     const handleDelete = (dayId) => {
         setSelectedDayId(dayId);
-        setShowModal(true);  // Show confirmation modal
+        setShowModal(true);
     };
 
     const confirmDelete = () => {
@@ -124,8 +163,8 @@ const UserHomeThai = () => {
             })
             .then(() => {
                 setNotes(notes.filter(note => note.id !== selectedDayId));
-                setShowModal(false);  // Close the modal after deletion
-                setSelectedDayId(null);  // Reset selected day ID
+                setShowModal(false);
+                setSelectedDayId(null);
             })
             .catch(error => {
                 console.error('There was an error deleting the day!', error);
@@ -135,12 +174,11 @@ const UserHomeThai = () => {
 
     const cancelDelete = () => {
         setSelectedDayId(null);
-        setShowModal(false);  // Close the modal without deleting
+        setShowModal(false);
     };
 
     return (
         <div className={styles.container}>
-
             <main className={styles.main}>
                 <div className={styles.addNoteSection}>
                     <h2 className={styles.addNoteTitle}>Add New Day</h2>
@@ -167,11 +205,20 @@ const UserHomeThai = () => {
                                     {new Date(note.date).toLocaleDateString()}
                                 </div>
                                 <Link
-                                 to={`/user-thaidata/${note.id}`}
-                                  className={styles.noteLink}
-                                  state={{ date: note.date }}>
+                                    to={`/user-thaidata/${note.id}`}
+                                    className={styles.noteLink}
+                                    state={{ date: note.date }}>
                                     <img src={akp_icon} alt="Day Image" className={styles.noteImage} />
                                 </Link>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        startEditing(note);
+                                    }}
+                                    className={`${styles.button} ${styles.editButton}`}
+                                >
+                                    Edit
+                                </button>
                                 <button
                                     onClick={() => handleDelete(note.id)}
                                     className={`${styles.button} ${styles.deleteButton}`}
@@ -179,8 +226,8 @@ const UserHomeThai = () => {
                                     Delete
                                 </button>
                                 <div className={styles.totalPrice}>
-                                   <p> Total Price: {loading ? 'Loading...' : `${formatPrice(totalPrice[note.id])}Kip`}</p>
-                                  <p>  Total Price: {loading ? 'Loading...' : `${formatPrice(totalThaiPrice[note.id])}Baht`}</p>
+                                    <p>Total Price: {loading ? 'Loading...' : `${formatPrice(totalPrice[note.id])}Kip`}</p>
+                                    <p>Total Price: {loading ? 'Loading...' : `${formatPrice(totalThaiPrice[note.id])}Baht`}</p>
                                 </div>
                             </div>
                         </div>
@@ -188,6 +235,7 @@ const UserHomeThai = () => {
                 </div>
             </main>
 
+            {/* Delete Confirmation Modal */}
             {showModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -195,6 +243,37 @@ const UserHomeThai = () => {
                         <div className={styles.modalActions}>
                             <button onClick={confirmDelete} className={`${styles.button} ${styles.confirmButton}`}>Yes</button>
                             <button onClick={cancelDelete} className={`${styles.button} ${styles.cancelButton}`}>No</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Modal */}
+            {showEditModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h3>Edit Day</h3>
+                        <div className={styles.editForm}>
+                            <input
+                                type="date"
+                                value={editDate}
+                                onChange={(e) => setEditDate(e.target.value)}
+                                className={styles.editDateInput}
+                            />
+                            <div className={styles.modalActions}>
+                                <button
+                                    onClick={saveDate}
+                                    className={`${styles.button} ${styles.confirmButton}`}
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    onClick={cancelEditing}
+                                    className={`${styles.button} ${styles.cancelButton}`}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
