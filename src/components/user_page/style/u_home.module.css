@@ -172,8 +172,10 @@
   
   .notesGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  }
+    grid-template-columns: repeat(3, 1fr); /* Adjusted size for 3 items per row */
+    gap: 1rem; /* Keeps the spacing between grid items */
+}
+
   .noteContent {
     height: 100%;
     display: flex;
@@ -182,6 +184,7 @@
     align-items: center;
     text-align: center;
 }
+
 
 .noteLink {
     font-size: 1.125rem;
@@ -203,20 +206,20 @@
   z-index: 1;
 }
 .noteCard {
-    margin-top: 20px;
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    height: 300px;
-    width: 350px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; 
-    transition: transform 0.5s ease-in-out;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 250px; /* Adjusted height if needed */
+  width: 300px; /* Adjusted to fit the grid */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+  transition: transform 0.5s ease-in-out;
 }
 
 .noteCard.clicked {

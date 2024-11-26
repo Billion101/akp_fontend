@@ -176,7 +176,10 @@ const UserHomeThai = () => {
         setSelectedDayId(null);
         setShowModal(false);
     };
-
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-GB"); // "en-GB" gives "DD/MM/YYYY" format
+    };
     return (
         <div className={styles.container}>
             <main className={styles.main}>
@@ -202,7 +205,7 @@ const UserHomeThai = () => {
                         >
                             <div className={styles.noteContent}>
                                 <div className={styles.dateBox}>
-                                    {new Date(note.date).toLocaleDateString()}
+                                {formatDate(note.date)}
                                 </div>
                                 <Link
                                     to={`/user-thaidata/${note.id}`}

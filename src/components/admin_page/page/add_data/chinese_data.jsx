@@ -38,8 +38,13 @@ const AddChaineseData = () => {
   const [users, setUsers] = useState([]);
   const [selectedRole, setSelectedRole] = useState("client");
   const location = useLocation();
-  const selectedDate = location.state?.date
-    ? new Date(location.state.date).toLocaleDateString()
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB"); 
+};
+
+const selectedDate = location.state?.date
+    ? formatDate(location.state.date)
     : "N/A";
     const [searchTerm, setSearchTerm] = useState("");
     const searchTimeout = useRef();
@@ -405,14 +410,6 @@ const AddChaineseData = () => {
           .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         return `${formattedPrice} Kip`;
       };
-      const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${day}/${month}/${year}`;
-    };
-    
       const sendWhatsAppMessage = (entry) => {
         const popup = document.createElement("div");
         popup.className = styles.popup;

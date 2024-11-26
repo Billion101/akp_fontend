@@ -35,8 +35,13 @@ const AddThaiData = () => {
   const [editingCell] = useState(null);
   const inputRefs = useRef([]);
   const location = useLocation();
-  const selectedDate = location.state?.date
-    ? new Date(location.state.date).toLocaleDateString()
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB"); // "DD/MM/YYYY" format
+};
+
+const selectedDate = location.state?.date
+    ? formatDate(location.state.date)
     : "N/A";
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState([]);

@@ -156,7 +156,12 @@ const UserHomeChainese = () => {
         setSelectedDayId(null);
         setShowModal(false);
     };
-
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-GB"); 
+    };
+    
+    
     return (
         <div className={styles.container}>
             <main className={styles.main}>
@@ -182,7 +187,7 @@ const UserHomeChainese = () => {
                         >
                             <div className={styles.noteContent}>
                                 <div className={styles.dateBox}>
-                                    {new Date(note.date).toLocaleDateString()}
+                                {formatDate(note.date)}
                                 </div>
                                 <Link
                                     to={`/user-chainesedata/${note.id}`}

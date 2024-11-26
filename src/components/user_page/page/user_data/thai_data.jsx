@@ -25,9 +25,14 @@ const UserThaiData = () => {
     const codeRefs = useRef([]);
     const editBoxRef = useRef(null);
     const location = useLocation();
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-GB"); // "DD/MM/YYYY" format
+    };
+    
     const selectedDate = location.state?.date
-      ? new Date(location.state.date).toLocaleDateString()
-      : "N/A";
+        ? formatDate(location.state.date)
+        : "N/A";
       const [searchTerm, setSearchTerm] = useState("");
     
       const searchTimeout = useRef();
