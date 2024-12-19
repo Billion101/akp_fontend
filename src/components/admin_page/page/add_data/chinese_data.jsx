@@ -465,7 +465,7 @@ const selectedDate = location.state?.date
 ມື້ນີ້ມີພັດສະດຸຂອງສາຂາເຂົ້າຮອດສາງເເລ້ວ
 ສາມາດກວດສອບລະຫັດ ເເລະ ຄ່າຂົນສົ່ງຂອງວັນທີ
 ${currentDate} ໄດ້ຜ່ານ:
-https://akplogistics.com
+https://www.akplogistics.com
     `;
           } else {
             message = `\`\`\`
